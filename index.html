@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#14213d">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>UEFC Impromptu Drill</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+*{box-sizing:border-box}html,body{margin:0}[hidden]{display:none!important}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+/* Layout: sister of Word Battle Drill. Three tabs, one column; the drill is a single straight path. */
+:root{
+  --bg:#f3f5f9; --surface:#ffffff; --fg:#14213d; --muted:#5b6478; --line:#d9deea;
+  --accent:#a86c0f; --accent-soft:#fbefd9; --ok:#1f7a4d; --bad:#b3261e;
+  --display:"Bricolage Grotesque",system-ui,sans-serif; --body:"Source Sans 3",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f1524; --surface:#18213a; --fg:#eef1f8; --muted:#a3acc2; --line:#2b3658;
+  --accent:#f0b04a; --accent-soft:#3a2e17; --ok:#6fd3a0; --bad:#ff8a80; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1524; --surface:#18213a; --fg:#eef1f8; --muted:#a3acc2; --line:#2b3658;
+  --accent:#f0b04a; --accent-soft:#3a2e17; --ok:#6fd3a0; --bad:#ff8a80; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font:17px/1.5 var(--body)}
+.wrap{max-width:720px;margin:0 auto;padding-block:24px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:18px}
+h1{font:800 clamp(1.7rem,5vw,2.3rem)/1.1 var(--display);margin:0;text-wrap:balance}
+h2{font:800 1.3rem/1.2 var(--display);margin:0;text-wrap:balance}
+p{margin:0}
+.sub,.src{color:var(--muted)}
+.sub{margin-top:4px}
+.src{font-size:.92rem}
+.label{font:600 .75rem var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.tabs{display:flex;gap:6px;border-bottom:1px solid var(--line);padding-bottom:10px}
+.tabs a{padding:7px 13px;border-radius:8px;color:var(--fg);text-decoration:none;font-weight:600}
+.tabs a[aria-current="page"]{background:var(--fg);color:var(--bg)}
+.view,.stack{display:flex;flex-direction:column}
+.view{gap:16px}.stack{gap:8px}
+.filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.filters label{display:flex;flex-direction:column;gap:4px;min-width:0}
+select{width:100%;padding:9px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--fg);font:16px var(--body)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.question{font:600 clamp(1.25rem,4vw,1.55rem)/1.25 var(--display);text-wrap:balance}
+.clock{font:800 clamp(3.2rem,14vw,4.8rem)/1 var(--display);font-variant-numeric:tabular-nums;text-align:center}
+.status{text-align:center;font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+button.b{border:1px solid var(--fg);background:var(--fg);color:var(--bg);border-radius:9px;padding:11px 18px;font:600 1rem var(--body);cursor:pointer}
+button.b.alt{background:transparent;color:var(--fg)}
+button:focus-visible,a:focus-visible,summary:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.zone-short{color:var(--muted)}.zone-good{color:var(--ok)}.zone-late{color:var(--accent)}.zone-over{color:var(--bad)}
+.steps{display:flex;flex-direction:column;gap:4px;list-style:none;margin:0;padding:0}
+.steps li{display:grid;grid-template-columns:58px minmax(0,1fr);gap:10px;padding:7px 9px;border-radius:8px}
+.steps li.on{background:var(--accent-soft)}
+.steps .t{font-variant-numeric:tabular-nums;font-weight:600;color:var(--accent)}
+.steps .en{display:block;color:var(--muted);font-size:.95rem}
+.checks{display:flex;flex-direction:column;gap:6px}
+.checks label{display:flex;gap:9px;align-items:flex-start}
+.checks input{margin-top:5px}
+.vocab{display:flex;flex-wrap:wrap;gap:6px}
+.vocab span{border:1px solid var(--line);border-radius:6px;padding:2px 8px;font-size:.92rem}
+details{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+details.flat{background:none;border:0;padding:0}
+summary{cursor:pointer;font:600 1.03rem var(--display)}
+.inner{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.97rem}
+td{border-bottom:1px solid var(--line);padding:6px 8px 6px 0;vertical-align:top}
+td:first-child{font-weight:600;width:52%}
+td:last-child{color:var(--muted)}
+ul{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:5px}
+.phrase{font-style:italic}
+.tip{background:var(--accent-soft);border-radius:8px;padding:10px 12px}
+.tag{display:block;font-size:.75rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>UEFC Impromptu Drill</h1>
+    <p class="sub">30 secondes de préparation, 2 à 3 minutes de parole, un seul passage.</p>
+  </header>
+  <nav class="tabs" id="tabs" aria-label="Sections"></nav>
+  <main id="main"></main>
+</div>
+
+<script>
+const FAM={
+A:{name:"Agree or disagree",steps:[
+  ["25 s","Position","“Can…? I disagree, and the word I disagree with is ‘completely’. I have two reasons.”"],
+  ["45 s","Raison 1 + exemple","“First, … For example, …”"],
+  ["45 s","Raison 2 + ton histoire + concession","“Second, … Take my own case: … Admittedly, … but …”"],
+  ["25 s","Trois mesures","“So what should we do? One, … Two, … Three, …”"],
+  ["10 s","Fin","“So no: [ta position en une phrase]. Thank you.”"]],
+  tip:"Prends un camp net. Tu peux nuancer sur un seul mot du sujet : completely, always, best, only."},
+T:{name:"What do you think about…?",steps:[
+  ["25 s","Ton avis en une phrase","“Who here has…? The one thing I think about this is: …”"],
+  ["45 s","Le bon côté + exemple","“There are two sides to this. On the good side, … For example, …”"],
+  ["45 s","Le risque + ton histoire","“On the other side, … Take my own case: …”"],
+  ["25 s","Trois règles","“So here are three rules. One, … Two, … Three, …”"],
+  ["10 s","Fin","“So [ton avis en une phrase]. Thank you.”"]],
+  tip:"Ne fais pas une simple liste de pour et de contre : les deux côtés servent ton avis du début."},
+O:{name:"Question ouverte",steps:[
+  ["25 s","Ta réponse en une phrase","“How can we…? If we do one thing, it should be …”"],
+  ["45 s","Pourquoi 1 + exemple","“This matters for two reasons. First, … For example, …”"],
+  ["45 s","Pourquoi 2 + ton histoire","“Second, … I saw this myself: …”"],
+  ["25 s","Trois étapes concrètes","“So here is how, in three steps. One, … Two, … Three, …”"],
+  ["10 s","Fin","“[Une image du résultat]. Thank you.”"]],
+  tip:"Le jury attend une solution. Tes trois étapes doivent dire qui fait quoi."}
+};
+const THEMES=[
+{id:"business",name:"Education and Business",
+ vocab:[["return on investment","retour sur investissement"],["tuition fees","frais de scolarité"],["public-private partnership","partenariat public-privé"],["entrepreneurial mindset","esprit d’entreprise"],["to commercialise education","marchandiser l’éducation"],["hands-on experience","expérience pratique"],["affordable","abordable"],["start-up costs","coûts de démarrage"],["market demand","demande du marché"],["to bridge the gap between school and industry","rapprocher l’école et l’entreprise"]],
+ phrases:["Education is an investment, not just an expense.","A student is not a customer."]},
+{id:"ai",name:"Education and Artificial Intelligence",
+ vocab:[["personalised learning","apprentissage personnalisé"],["instant feedback","retour immédiat"],["academic integrity","intégrité académique"],["critical thinking","esprit critique"],["to rely on","dépendre de, s’appuyer sur"],["algorithmic bias","biais algorithmique"],["to automate routine tasks","automatiser les tâches répétitives"],["plagiarism","plagiat"],["to outsource thinking","déléguer la réflexion"],["human oversight","supervision humaine"]],
+ phrases:["AI can give answers, but it cannot do the learning for you.","Let AI do the repetitive work, so students can do the thinking."]},
+{id:"career",name:"Education and Career Development",
+ vocab:[["employability","employabilité"],["lifelong learning","apprentissage tout au long de la vie"],["soft skills","compétences humaines"],["to upskill","monter en compétences"],["work placement","stage en entreprise"],["career guidance","orientation professionnelle"],["a portfolio of projects","un portfolio de projets"],["the labour market","le marché du travail"],["a skills mismatch","une inadéquation des compétences"],["to enter the workforce","entrer dans la vie active"]],
+ phrases:["A degree opens the door, but skills keep you in the room.","We cannot predict the jobs of the future, but we can prepare the people who will invent them."]},
+{id:"systems",name:"Education and School Systems",
+ vocab:[["curriculum","programme scolaire"],["rote learning","apprentissage par cœur"],["assessment","évaluation"],["overcrowded classrooms","classes surchargées"],["teacher training","formation des enseignants"],["to be left behind","être laissé pour compte"],["blended learning","enseignement hybride"],["continuous assessment","contrôle continu"],["education policy","politique éducative"],["to fall behind","prendre du retard"]],
+ phrases:["What gets graded gets learned.","No system can rise above the quality of its teachers."]},
+{id:"family",name:"Education and Family",
+ vocab:[["upbringing","éducation reçue à la maison"],["role model","modèle à suivre"],["parental involvement","implication des parents"],["to instil values","inculquer des valeurs"],["peer pressure","pression des pairs"],["household chores","tâches ménagères"],["first-generation student","premier de sa famille à étudier"],["to make sacrifices","faire des sacrifices"],["high expectations","attentes élevées"],["to support a child","soutenir un enfant"]],
+ phrases:["Parents are a child’s first teachers.","Supporting a child needs presence more than a diploma."]},
+{id:"social",name:"Education and Social Issues",
+ vocab:[["social mobility","ascension sociale"],["out-of-school children","enfants non scolarisés"],["gender gap","écart entre filles et garçons"],["dropout rate","taux d’abandon scolaire"],["to widen access","élargir l’accès"],["inclusive education","éducation inclusive"],["underprivileged","défavorisé"],["vicious circle","cercle vicieux"],["early marriage","mariage précoce"],["equal opportunity","égalité des chances"]],
+ phrases:["Talent is everywhere, but opportunity is not.","Educating a girl changes more than one life."]},
+{id:"media",name:"Education, Media and the Digital Society",
+ vocab:[["digital literacy","culture numérique"],["misinformation","désinformation"],["digital divide","fracture numérique"],["screen time","temps d’écran"],["to fact-check","vérifier les faits"],["attention span","capacité d’attention"],["online platform","plateforme en ligne"],["to go viral","devenir viral"],["internet access","accès à internet"],["online safety","sécurité en ligne"]],
+ phrases:["Information is everywhere, but guidance is rare.","A new tool can widen the gap if only some students can use it."]}
+];
+const SUBJECTS={
+business:[
+["A","Universities should be run like businesses. Do you agree or disagree?","I disagree. Universities can borrow a company’s efficiency, but profit should never be their purpose.","First, efficiency is a real lesson: clear goals, clean budgets and accountability would help any university.","Second, a student is not a customer. If the customer is always right, grades can be bought. A foundation that supported my studies from 2015 to 2023 asked for results, not profit. Admittedly, universities need money, but money is the means.","One, publish how budgets are spent. Two, partner with companies on research. Three, protect grants for students who cannot pay.","Let’s run universities well, without selling what they stand for."],
+["T","What do you think about teaching entrepreneurship in secondary school?","The one thing I think is this: it is a great idea if it teaches students to solve problems before it teaches them to make money.","On the good side, students learn to take initiative, work in teams and accept failure. Those skills help every future employee too.","On the other side, not every student wants a company, and a course can become pure theory. With SalinWatch, we learned about customers by meeting real needs, not by reading slides.","One, start from a local problem. Two, build a small project. Three, invite real entrepreneurs to give feedback.","Let’s teach students to create value, and the businesses will follow."],
+["O","How can companies and schools work better together?","If they do one thing, companies should bring real problems into the classroom.","First, students are motivated by work that matters. A real problem gives a reason to learn the theory.","Second, companies gain too: they discover talent before hiring. In my innovation project on salt water in boreholes, talking to real users changed our solution completely.","One, offer supervised internships. Two, run a joint project every year. Three, let professionals teach some modules.","When the classroom meets the workplace, both of them get smarter."],
+["A","Private schools are better than public schools. Do you agree or disagree?","I disagree with that generalisation. Quality does not depend on who owns a school. It depends on resources and accountability.","First, some private schools succeed because they select students and charge fees. That is an advantage, not a miracle.","Second, public schools can produce excellent students when teachers are supported. I was an Excellence scholar of the Beninese State at university, so I know what public investment can do. Admittedly, many public classes are overcrowded.","One, pay and train teachers properly. Two, publish results for all schools. Three, reduce class sizes first where the need is greatest.","A child’s future should not depend on which gate they walk through."],
+["O","Who should pay for higher education?","Everyone who benefits should pay a fair share: the state, employers and graduates.","First, society benefits from doctors, engineers and teachers, so the state must invest, especially for those with no means.","Second, employers and graduates benefit financially. A scholarship carried my own studies, and I know that those who received help should help the next student.","One, the state funds the base. Two, companies fund scholarships in their fields. Three, graduates contribute once they earn a salary.","Talent should never stop at the price of a registration form."],
+["T","What do you think about companies sponsoring schools in exchange for advertising?","The one thing I think is this: sponsorship is welcome, but a classroom should never become a billboard.","On the good side, sponsors can pay for laboratories, computers and books that many schools simply cannot afford.","On the other side, children trust what they see at school. If a soft drink brand sponsors a science class, what message does that send about health?","One, publish all sponsorship agreements. Two, ban advertising aimed at young children. Three, keep sponsors away from the curriculum.","Companies can pay for the classroom, but they should not write the lesson."],
+["A","Schools should teach students how to manage money. Do you agree or disagree?","I agree. Every student will handle money one day, yet many leave school without knowing how to make a budget.","First, money decisions shape a whole life: savings, debt and small business. A young person who understands them is harder to exploit.","Second, it makes mathematics concrete. As a scholarship student, I quickly learned that a budget is not theory. Admittedly, the timetable is already full, but this fits inside existing subjects.","One, teach budgeting through mathematics. Two, explain saving and credit. Three, let students manage a small class project.","If school prepares us for life, it should prepare us for the end of the month."],
+["O","How can universities help students turn their ideas into businesses?","If universities do one thing, they should give students a safe place to try and fail.","First, ideas need testing. A student needs customers and feedback more than another lecture.","Second, students need support they cannot find alone. At Water Week, an innovation competition pushed our team to turn a salinity sensor idea into a real project, and we won third place.","One, create a student incubator. Two, organise innovation competitions. Three, connect students with mentors and first funders.","Every great company began as an idea someone was allowed to test."],
+["A","Education is a product like any other. Do you agree or disagree?","I disagree. You can buy a phone and use it the same day. Nobody can buy knowledge without doing the work.","First, a product can be returned, and a childhood cannot. When education fails, society pays for decades.","Second, its value goes beyond the buyer. When a foundation invested in my education, it expected no profit. It expected a person who could serve others. Admittedly, schools have costs that someone must pay.","One, keep basic education a public right. Two, regulate private providers. Three, measure learning, not revenue.","Education has a cost, but it should never have only a price."],
+["T","What do you think about student loans?","The one thing I think is this: loans can open doors, but they should never lock graduates in debt.","On the good side, a loan lets a student without savings reach university and repay later.","On the other side, in a region where jobs are scarce, debt is frightening. I studied with scholarships, and I know how much that freedom helped me choose my path.","One, keep interest low. Two, start repayment only after a first job. Three, combine loans with grants for the poorest.","A diploma should be a start in life, not the start of a debt."]
+],
+ai:[
+["T","What do you think about the use of artificial intelligence in schools?","The one thing I think is this: AI is an excellent assistant and a terrible replacement for your own brain.","On the good side, it gives every student a patient tutor and gives teachers back time spent on routine correction.","On the other side, it can do the work without the learning. For this competition, I used AI to build a vocabulary app. It built the tool in an evening, but it could not learn the words for me.","One, allow AI openly. Two, teach students to check it. Three, grade the process as much as the product.","Let AI do the repetitive work, so students can do the thinking."],
+["A","Artificial intelligence will replace teachers. Do you agree or disagree?","I disagree. AI will replace some tasks of teaching, but not the teacher.","First, a teacher does more than deliver content. They notice a student who is lost, tired or afraid. Last April, as a volunteer tutor, I learned that this is half of the job.","Second, students need trust and a role model. No machine has ever inspired a child by believing in them. Admittedly, AI explains some things faster than people do.","One, use AI for correction and exercises. Two, train teachers to use it. Three, give the saved time back to students.","AI can answer questions. Teachers teach us which questions to ask."],
+["A","AI makes students lazy. Do you agree or disagree?","I disagree. AI does not make students lazy. Our way of assessing them does, when it rewards only the final product.","First, a student who can get a perfect essay in ten seconds will do so if the essay is all that counts.","Second, used well, AI demands effort. When I used it to build my vocabulary app, I still had to practise every word myself. Admittedly, the temptation to copy is real.","One, ask students to defend their work orally. Two, grade drafts. Three, set tasks based on local realities.","Change what we reward, and laziness will stop paying."],
+["O","How should schools teach students to use AI responsibly?","If schools do one thing, they should bring AI into the open instead of pretending it is not there.","First, a ban only teaches students to hide. Used openly, AI can be discussed and improved on.","Second, students need to see that AI makes mistakes. In my own studies, I have learned that a confident answer can still be wrong, so checking is a skill.","One, teach students to verify AI answers. Two, require them to declare its use. Three, discuss bias and privacy in class.","Responsible users are made in the classroom, not by a rule on the wall."],
+["T","What do you think about AI tutors in countries with few teachers?","The one thing I think is this: they are promising, but they must support teachers, never excuse their absence.","On the good side, one tool can give individual help to a student in a class of eighty, at any hour.","On the other side, AI needs electricity, connection and content in local languages. In my own courses, even installing software depends on having a good connection.","One, make tools work offline. Two, include local languages. Three, keep a trained teacher in charge.","A tutor in every pocket is a great dream, provided every child has the pocket."],
+["A","Students should be allowed to use AI during exams. Do you agree or disagree?","I disagree for most exams, because an exam must show what the student can do alone.","First, some foundations must live in your head. A doctor or an engineer cannot stop to ask a chatbot in every emergency.","Second, there is a fair exception: exams on analysis, where everyone has the tool and judgement is tested. Working with AI myself taught me that judgement matters most. Admittedly, professionals use AI at work every day.","One, keep some exams without AI. Two, add open-tool exams on judgement. Three, follow them with an oral defence.","The tool may be allowed, but the thinking must remain ours."],
+["T","What do you think about AI grading students’ work?","The one thing I think is this: AI can mark the routine, but a human should decide the grade that matters.","On the good side, it gives quick, consistent feedback and frees teachers buried under piles of copies.","On the other side, it can miss an original idea or penalise a student’s style. A student’s future should not depend on an error nobody can explain.","One, use AI for exercises and first drafts. Two, keep teachers responsible for final grades. Three, give every student the right to appeal.","Let the machine read fast, and let the teacher read well."],
+["O","How can teachers prepare for classrooms with AI?","If we do one thing, we should train teachers before we buy any tool.","First, a teacher who fears AI cannot guide students who already use it every day.","Second, teachers need practical time, not a single speech. I learned far more by building something with AI than I could have by reading about it.","One, train teachers with their own lessons. Two, create groups where they share what works. Three, redesign assessment together.","The teacher who learns alongside AI will never be replaced by it."],
+["A","Learning to code is no longer useful because AI can write code. Do you agree or disagree?","I disagree. When AI writes code, knowing how to read and judge that code matters even more.","First, you cannot check what you do not understand. An error in a program for water data can become a wrong public decision.","Second, coding teaches logic. I started out in water and sanitation and then learned Python, and it changed how I break problems down. Admittedly, students may need less syntax than before.","One, teach logic first. Two, use AI as a partner. Three, ask students to explain every line.","AI can write the code, but we still have to know what we are asking for."],
+["O","How can African schools benefit from AI without being left behind?","If we do one thing, we should use AI to solve our own problems rather than just consume tools built elsewhere.","First, Africa’s challenge is access: few teachers, few books, and languages rarely covered by technology.","Second, our students can build. With two classmates in Benin, I worked on connected sensors for salt water in boreholes. Local problems give us a real advantage.","One, invest in connection and electricity. Two, develop content in African languages. Three, teach students to build tools, not only use them.","Africa should not wait for the future of education. It should help write it."]
+],
+career:[
+["O","What should schools do to prepare students for the jobs of the future?","If schools do one thing, they should teach students how to learn.","First, jobs are moving. The World Economic Forum expects 170 million new jobs and 92 million lost by 2030.","Second, employers want proof. I moved from water and sanitation to hydroinformatics, and my innovation project showed more about me than any transcript.","One, teach learning skills. Two, build each year around a real local problem. Three, bring professionals into the classroom.","We cannot predict the jobs of the future, but we can prepare the people who will invent them."],
+["A","A university degree is no longer necessary to succeed. Do you agree or disagree?","I disagree. A degree is no longer sufficient, but that is very different from unnecessary.","First, a degree gives foundations and opens doors, especially in fields like medicine, engineering and research.","Second, it is not enough alone. What made my profile stronger was adding internships, a real project and online training to my studies. Admittedly, some people succeed brilliantly without one.","One, keep degrees rigorous. Two, add real projects to them. Three, recognise skills gained outside school too.","The degree opens the door, and your skills keep you in the room."],
+["T","What do you think about making internships compulsory?","The one thing I think is this: yes, provided the internship is real work with real supervision.","On the good side, internships show students what no lecture can. I completed five during my studies, and each one showed me what I still had to learn.","On the other side, a bad internship is free labour and photocopies. Compulsory internships without supervision would only produce frustrated students.","One, set clear learning goals. Two, assign a real supervisor. Three, have students report on what they learned.","An internship should be a first step into a career, not a free pair of hands."],
+["A","Students should choose their career before they finish secondary school. Do you agree or disagree?","I disagree. At sixteen, students should explore rather than sign a contract with their future.","First, young people barely know what jobs exist, and many of tomorrow’s jobs do not exist yet.","Second, paths change. I began in water and sanitation and discovered data and code only later. That change made me stronger. Admittedly, a clear goal can be motivating.","One, give students real exposure to jobs. Two, keep their options open. Three, make it easy to change direction.","A first choice should be a beginning, not a sentence."],
+["O","How can young graduates find work when jobs are scarce?","If they do one thing, they should stop waiting for a job offer and start proving what they can do.","First, a graduate with visible work stands out. A project says more than a list of courses.","Second, a local problem can become work. With SalinWatch, we looked at salt water in boreholes as a real need that someone would pay to solve.","One, build a portfolio. Two, join networks and competitions. Three, offer a small solution to a real local problem.","When the door is closed, build something that makes people open it."],
+["T","What do you think about career guidance in secondary schools?","The one thing I think is this: it is badly needed, but it must show students reality, not just a list of professions.","On the good side, good guidance saves years. Many students choose a field only because a relative did, or because a name sounds prestigious.","On the other side, one talk per year changes nothing, and guidance based only on grades can close doors too early.","One, invite professionals to schools. Two, organise short visits to workplaces. Three, train counsellors on new jobs.","Nobody should discover their vocation by accident."],
+["A","Practical skills matter more than theoretical knowledge. Do you agree or disagree?","I disagree with “more”. Skills without theory are fragile, and theory without skills is useless.","First, theory tells you why something works. It is what lets you adapt when a situation changes.","Second, practice shows you what theory hides. In my research at Ganvié, I took water and fish samples, and the theory only made full sense on the ground. Admittedly, many schools have too little practice.","One, pair each theory course with a practical. Two, assess both. Three, send students into the field early.","The best hands are the ones guided by a trained mind."],
+["O","How can universities make their graduates more employable?","If universities do one thing, they should make employers part of the education, not just its destination.","First, programmes must follow the labour market. Skills that were useful ten years ago may no longer open any door.","Second, graduates need proof of what they can do. My internships and project work taught me things that exams never could.","One, review programmes with employers. Two, require real projects. Three, teach communication and teamwork.","A university succeeds when its graduates are needed, not just certified."],
+["A","Young people should work for a year before going to university. Do you agree or disagree?","I disagree with making it a rule, though it can be good for some students.","First, many families cannot afford a year’s delay, and students may never come back to study.","Second, you can get the same experience during your studies. My internships showed me the world of work while I was still in university. Admittedly, a year of work builds real maturity.","One, keep it as a choice. Two, offer internships from the first year. Three, welcome students who return after working.","Experience matters, and it does not have to delay a student’s education."],
+["T","What do you think about changing your career path after university?","The one thing I think is this: changing direction is often a sign of growth, not failure.","On the good side, what you have learned goes with you. When I moved from water and sanitation to hydroinformatics, my first field made my new one more useful.","On the other side, it costs time and money, and not everybody has a safety net. It needs a reason, not just an impulse.","One, identify the skills you can carry over. Two, train through short courses. Three, test the new field before leaving the old one.","A career is not a straight road. It is a series of better questions."]
+],
+systems:[
+["A","Online learning can completely replace traditional classrooms. Do you agree or disagree?","I disagree, and the word I disagree with is “completely”. Online learning extends the classroom, but cannot replace it.","First, it depends on what a student already has. I follow NASA’s online training from Benin for free, but that takes a connection, a laptop and discipline.","Second, a classroom teaches what a screen cannot. As a volunteer tutor, I saw that only a person can notice you are lost. Admittedly, online courses are cheaper and reach more people.","One, put lectures online. Two, use class time for practice. Three, invest in connection.","Let’s not replace teachers with screens. Let’s give teachers better screens."],
+["A","Exams are the best way to measure what students know. Do you agree or disagree?","I disagree. Exams measure what a student can reproduce on one day, under pressure.","First, what gets graded gets learned. If exams reward memory, students memorise and quickly forget.","Second, real ability appears over time. My final research project taught me more, and showed more of my ability, than any single test. Admittedly, exams are cheap and seem fair.","One, keep exams for the foundations. Two, add continuous assessment. Three, grade real projects and oral defences.","Let’s measure what we want students to become, not just what they can recite."],
+["O","If you could change one thing in your country’s school system, what would it be?","If I could change one thing, I would change assessment, because it controls everything else.","First, teachers teach to the test and students study for it. Change the test, and the classroom follows.","Second, many students are capable of more than an exam shows. Volunteering as a tutor, I met students who understood more than their marks suggested.","One, add continuous assessment. Two, include projects and oral work. Three, train teachers to evaluate them fairly.","Change what we measure, and we change what our children become."],
+["T","What do you think about teaching in local languages in primary school?","The one thing I think is this: it is a strong bridge. A child learns to think faster in the language of home.","On the good side, children understand from day one, and parents can follow and support their learning.","On the other side, there is a shortage of trained teachers and books, and families fear it will limit their children. My own mother tongue is Fon, and I still became fluent in French and English.","One, begin with local languages. Two, move gradually to French and English. Three, train teachers and produce books.","Let’s teach children in the language they think in, then open the world to them."],
+["A","Homework should be abolished. Do you agree or disagree?","I disagree. We should abolish useless homework, not homework itself.","First, repetitive exercises punish children who have no quiet place, no light or no help at home.","Second, good homework builds independence. Some of what I remember best from school is what I had to find out alone. Admittedly, young children need play and rest more.","One, reduce the quantity. Two, set investigations rather than repetition. Three, adapt the load to the child’s age.","The question is not how much work goes home, but how much learning does."],
+["A","Class size matters more than teacher quality. Do you agree or disagree?","I disagree. Smaller classes help, but a great teacher matters more.","First, a small class with a poor teacher is simply a smaller problem.","Second, good teachers change lives. When a tutor or teacher explains something a different way, a lost student comes back; I have seen this as a volunteer tutor. Admittedly, nobody can work miracles with a hundred students in the room.","One, invest in teacher training first. Two, set a limit on class sizes. Three, use assistants and peer tutoring in big classes.","Build more classrooms, but above all, invest in the person standing in them."],
+["T","What do you think about replacing final exams with continuous assessment?","The one thing I think is this: it is more fair and more useful, if it is done honestly.","On the good side, a single bad day no longer decides a student’s future, and teachers see progress as it happens.","On the other side, it adds to the teacher’s workload and can open the door to favouritism. As a class representative, I know how much coordination even simple things require.","One, combine it with a smaller final exam. Two, use clear shared criteria. Three, give teachers time and training.","Learning happens every day, so it should be measured more than once."],
+["O","How can we attract the best people into the teaching profession?","If we do one thing, we must make teaching a career that talented people are proud to choose.","First, pay matters. Nobody can inspire a class while worrying about the end of the month.","Second, status matters. The teachers who changed my path deserved as much respect as doctors or engineers.","One, pay teachers decently and on time. Two, offer real career progress. Three, train them and celebrate their successes publicly.","A nation’s future stands in front of a blackboard, so let’s treat it that way."],
+["A","Technical and vocational education deserves the same respect as university. Do you agree or disagree?","I agree. A country needs plumbers and technicians as much as it needs lawyers.","First, the water we drink depends on technicians. In my field, without skilled hands, the best engineering plan stays on paper.","Second, it offers quick access to real jobs for young people. My internships on water projects taught me to respect that know-how. Admittedly, the image of these schools is often poor.","One, modernise their equipment. Two, involve companies. Three, allow bridges towards university.","Let’s stop asking whether a job is prestigious, and ask whether it is needed."],
+["O","What would the school of the future look like?","If I imagine one thing, it is a school where students solve real problems instead of only reciting answers.","First, knowledge is everywhere now. Lectures can move online, and classrooms can become workshops.","Second, learning must connect to life. Children in a coastal village could study water by testing their own wells, just as our team studied salt water in boreholes.","One, turn classrooms into workshops. Two, build the year around local problems. Three, make teachers mentors.","The school of the future should look less like a lecture and more like a laboratory."]
+],
+family:[
+["A","Parents are more responsible for a child’s education than teachers. Do you agree or disagree?","I partly disagree. Parents start the job and teachers extend it, so it only works as a partnership.","First, values and habits begin at home, long before the first day of school.","Second, teachers bring what many parents cannot, such as specialised knowledge. [Add a true memory from your family here.] Admittedly, a child with no support at home starts with a real disadvantage.","One, parents build routines. Two, teachers keep them informed. Three, both meet regularly to follow the child.","A child learns best when home and school pull in the same direction."],
+["T","What do you think about parents choosing their children’s careers?","The one thing I think is this: parents should guide, but the child should decide.","On the good side, parents have experience and want to protect their children from insecurity.","On the other side, a career chosen for someone else is hard to sustain. My own path moved from water and sanitation to data, and I could not have predicted that. [Add what your parents said, if true.]","One, parents share advice. Two, students explore real jobs. Three, both talk honestly about risks and money.","Parents can give their child a compass, but the child must walk the road."],
+["O","How can parents who did not go to school support their children’s education?","If they do one thing, it is to show that school matters, and that needs no diploma.","First, children notice what their parents value. A parent who asks about school every evening sends a strong message.","Second, routine beats knowledge. A fixed time and a quiet corner help more than perfect explanations. [Add a true family example here.]","One, set a daily routine. Two, meet the teacher regularly. Three, ask the child to explain what they learned.","You don’t need a diploma to raise a child who earns one."],
+["A","Homeschooling is better than going to school. Do you agree or disagree?","I disagree for most children, because school teaches more than lessons.","First, school is where we learn to live with people who are not like us: to disagree, to share and to lose.","Second, few parents have the time or training to teach every subject. As a tutor, I learned how hard explaining really is, even with one subject. Admittedly, homeschooling can suit some children.","One, keep school as the norm. Two, regulate homeschooling. Three, make schools safer and better for all children.","Children need their families, but they need the world too."],
+["T","What do you think about the pressure parents put on children to get good grades?","The one thing I think is this: high expectations help a child, but fear does not.","On the good side, expectations tell a child: I believe you are capable. My scholarship depended on staying at the top, and that demand made me stronger.","On the other side, when love seems to depend on marks, children hide failure, or give up. A low grade should start a conversation, not a punishment.","One, praise effort. Two, ask what happened before judging. Three, celebrate progress, not only rank.","Let’s ask our children to do their best, and make sure they know they’re loved anyway."],
+["O","How can schools and parents communicate better?","If they do one thing, they should talk before there is a problem.","First, many parents only hear from school when something goes wrong, so they stop coming.","Second, communication must fit real lives. As class representative, I have learned that a short, clear message at the right time works better than a long meeting.","One, send simple regular updates by phone. Two, hold meetings at suitable times. Three, use local languages when needed.","A child does better when the two adults who matter most are talking to each other."],
+["A","Children learn more from their parents than from school. Do you agree or disagree?","I partly agree. Children learn who to be at home, and what to know at school.","First, values, language and attitudes to work come from what children see every day.","Second, school opens what home cannot. The curiosity that led me to study water began near my home in Djassin, but school gave me the tools to investigate it. Admittedly, not all homes teach good lessons.","One, value the parents’ role. Two, connect lessons to home life. Three, give extra support when home cannot help.","Home gives us our roots, and school gives us our reach."],
+["T","What do you think about children helping with the family business during the school term?","The one thing I think is this: a child can help, but never at the expense of school.","On the good side, children learn responsibility, numbers and the value of money. Many families also truly need that help.","On the other side, a tired child learns little, and missed lessons add up until the child drops out. That is how poverty passes from one generation to the next.","One, limit help to weekends and holidays. Two, support families financially. Three, have teachers report repeated absence early.","The shop can wait until after school, but a childhood cannot wait."],
+["O","How can families encourage a love of learning at home?","If families do one thing, they should make curiosity welcome at home.","First, children copy adults. A parent who reads or asks questions teaches more than one who only says “study”.","Second, learning does not need money. As a child in Djassin, I learned to ask questions by watching what happened around me, near the canal and at the market.","One, answer questions or find the answers together. Two, read aloud, in any language. Three, turn daily life into small experiments.","A child who loves learning will never need to be told to study."],
+["A","Families should spend the same on the education of girls and boys. Do you agree or disagree?","I agree, without hesitation. A family’s investment should follow a child’s talent, not their gender.","First, it is simply fair. A girl’s brain is not a cheaper investment than a boy’s.","Second, it pays off for everyone. An educated woman raises the whole family’s health and income. A foundation once bet on me for my results alone; every girl deserves that bet. Admittedly, poor families face hard choices.","One, make school affordable. Two, support families with grants for girls. Three, show role models from their own communities.","When we educate a daughter, we change more than one life."]
+],
+social:[
+["A","Education is the best solution to poverty. Do you agree or disagree?","I agree, with one condition: education is necessary, but it must lead to real opportunity.","First, it gives people choices. A foundation paid for much of my schooling, and that decision changed everything for me.","Second, a diploma without a job only produces disappointed graduates. Admittedly, hunger or illness can stop a child before education has a chance.","One, make good schools accessible to all. Two, teach skills the market needs. Three, combine education with health and job policies.","Education gives people a ladder, and we must make sure it leans on something solid."],
+["O","How can we keep more girls in school?","If we do one thing, we must remove the reasons families take girls out of school.","First, cost: when money is short, parents too often keep sending only the boys. Globally, about 251 million children and youth are out of school.","Second, safety and dignity: a long road, unsafe toilets or early marriage can end a girl’s studies. A scholarship kept me in school, and it can do the same for her.","One, offer grants for girls. Two, make schools and the road to them safe. Three, involve mothers and women role models.","Keep a girl in school today, and you change a family tomorrow."],
+["T","What do you think about scholarships based only on merit?","The one thing I think is this: merit should count, but it should not be the only thing that counts.","On the good side, it rewards effort. My scholarship depended on my results, and it pushed me to keep working.","On the other side, marks often reflect the school, the books and the quiet room a child had. A brilliant student may be hidden behind a modest score.","One, combine merit with need. Two, look at progress, not only rank. Three, reach out to rural schools.","Talent is everywhere, but opportunity is not, so scholarships must go looking for it."],
+["A","Education reduces inequality between rich and poor. Do you agree or disagree?","I agree, but only when quality is shared.","First, it can be the great equaliser. I was able to study thanks to scholarships rather than family wealth.","Second, when rich children get good schools and poor children get crowded ones, school only repeats inequality. UNESCO figures show 33% of school-age children out of school in low-income countries, against 3% in high-income countries. Admittedly, a good school alone cannot do it all.","One, put the best resources where need is greatest. Two, reward teachers in poor areas. Three, fund grants.","Education can close the gap, or quietly confirm it. That choice is ours."],
+["O","What should schools do to stop bullying and violence?","If schools do one thing, they should make it safe to speak up.","First, silence protects the bully. Victims stay quiet because they fear revenge or fear not being believed.","Second, bystanders hold the power. As a class representative, I have learned that students often listen to each other more than to any rule.","One, create a confidential way to report. Two, train teachers to respond quickly. Three, teach students to intervene and support the victim.","No child can learn when they are afraid to walk into class."],
+["T","What do you think about free education for all?","The one thing I think is this: it is the right goal, but free does not automatically mean good.","On the good side, it removes the first barrier. I know from my own scholarships how much a lifted cost changes a family’s decisions.","On the other side, when enrolment rises without more teachers and classrooms, free education can become crowded and empty. Hidden costs like uniforms and books also remain.","One, fund schools properly. Two, remove hidden costs. Three, measure learning, not only enrolment.","Education for all should mean learning for all."],
+["A","Education should be the first priority of every government. Do you agree or disagree?","I agree, because every other priority depends on it.","First, health, security and the economy all need trained people. Nobody can build a hospital without doctors and engineers.","Second, it pays back over generations. An investment in one student’s schooling in 2015 is still giving back today, as I can say from experience. Admittedly, a government must also meet urgent needs like food and safety.","One, protect the education budget. Two, spend it on teachers first. Three, publish the results every year.","Roads wear out, but an educated generation keeps building."],
+["O","How can schools include students with disabilities?","If schools do one thing, they should stop seeing disability as the student’s problem and start fixing the barriers.","First, many barriers are physical: stairs, poor lighting, no materials for students who cannot see or hear.","Second, attitudes matter even more. Tutoring taught me that when someone does not understand, the explanation may need to change, not the student.","One, make buildings accessible. Two, train teachers in inclusive methods. Three, involve families and classmates.","A school that works for every child works better for all of them."],
+["T","What do you think about the gap between rural and urban schools?","The one thing I think is this: it is one of our greatest injustices, as a child’s village can decide their future.","On the good side, there is real talent in rural schools, and some digital tools can now reach them.","On the other side, rural schools often lack teachers, electricity and internet. Even installing course software needs a connection that many cannot take for granted.","One, reward teachers who work in rural areas. Two, bring electricity and connection. Three, offer rural students grants.","Where you are born should not decide how far you can go."],
+["O","How can education help communities protect their environment?","If education does one thing, it should start with the water, soil and air around the students.","First, people protect what they understand. Near my home in Djassin, I saw a polluted canal long before I could explain it.","Second, studying local problems gives real results. In my research at Ganvié, we tested 54 water samples and 37 fish samples, linking pollution to everyday activity.","One, teach science through local problems. Two, let students measure their environment. Three, share findings with the community.","Teach a child to test their water, and you create a guardian for it."]
+],
+media:[
+["A","Smartphones should be banned from classrooms. Do you agree or disagree?","I partly agree. Phones should stay away during lessons by default, but a total ban misses the point.","First, attention is fragile. One notification can break a whole lesson.","Second, a phone can also be a library. I built a vocabulary app for my own training with AI, and it runs on my phone. Admittedly, a clear rule is easier to enforce.","One, keep phones away by default. Two, allow planned use for class activities. Three, teach students how to control their own use.","Let’s not fear the tool. Let’s teach students to be its master."],
+["T","What do you think about learning through social media?","The one thing I think is this: it is a great door to curiosity, but a poor substitute for structured study.","On the good side, a short video can spark an interest, and explain in one minute what a textbook made difficult.","On the other side, algorithms reward what is shocking, not what is true, and short videos don’t build deep understanding. I have followed NASA’s online course, and a real course demands far more than scrolling.","One, follow reliable creators. Two, check sources. Three, move from videos to real courses.","Let social media open the door, but let’s not live in the corridor."],
+["O","How can schools teach students to recognise fake news?","If schools do one thing, they should train students to check before they share.","First, misinformation spreads faster than corrections, and being young and digital does not protect anyone from it.","Second, verification is a skill that takes practice. Research taught me to ask for evidence: where does this number come from, and who measured it?","One, always check the source. Two, compare with a second source. Three, practise on real viral posts.","In the digital age, the most important question a student can ask is: how do you know?"],
+["A","The internet has made teachers unnecessary. Do you agree or disagree?","I disagree. The internet gives us information, but teachers give us direction.","First, information is everywhere, and guidance is rare. A beginner doesn’t even know which question to search for.","Second, learning needs a relationship. I follow an online NASA course, but the discipline to finish it came from years with real teachers. Admittedly, the internet has taken over the teacher’s role as the only source.","One, make teachers guides rather than lecturers. Two, use online content in class. Three, teach students to evaluate sources.","The internet can hold every answer, but teachers help us become people who can use them."],
+["T","What do you think about the digital divide between rich and poor students?","The one thing I think is this: it is the most urgent issue in digital education, because each new tool can widen it.","On the good side, one connected laptop can give a poor student access to the same courses as anyone. I follow NASA training from Benin at no cost.","On the other side, without connection or equipment, all of this does not exist. In one of my courses, simply installing the tools needed internet access.","One, connect schools first. Two, create offline resources. Three, share devices through school libraries.","A free course is not free if you cannot get online."],
+["T","What do you think about teachers using social media to communicate with students?","The one thing I think is this: it is useful and practical, as long as the boundaries are clear.","On the good side, students already live there. As a class representative, I know a quick message can reach everyone faster than any notice board.","On the other side, it blurs the line between teacher and friend, raises privacy issues, and excludes those without phones or data.","One, use official group channels. Two, set clear hours and rules. Three, always offer a non-digital alternative.","Let’s meet students where they are, but stay who we are."],
+["A","Young people spend too much time on screens to learn properly. Do you agree or disagree?","I partly disagree. The problem is less the number of hours than what those hours contain.","First, an hour spent building or studying on a screen is completely different from an hour of endless scrolling.","Second, I spent hours on a screen preparing for this competition with my own vocabulary app, and that time taught me a lot. Admittedly, sleep and attention suffer when screens take over.","One, teach active use over passive use. Two, protect sleep and study time. Three, offer sport and reading as real alternatives.","Let’s stop counting only the hours, and start asking what they produce."],
+["O","How can students in areas with poor internet benefit from digital learning?","If we do one thing, we should design for poor connection from the start.","First, tools built for fast internet leave out the students who need them most. Many courses assume a connection that is not there.","Second, simple solutions already work. Heavy course software showed me how much a download can cost; lessons on a light offline app would cost almost nothing.","One, make content downloadable. Two, use radio, SMS and school servers. Three, create connected spaces in schools.","Digital learning should reach the student who has the least, not only the one who has the most."],
+["A","Influencers have more influence on students than teachers do. Do you agree or disagree?","I agree in terms of attention, but not in terms of lasting impact.","First, influencers are present every day, speak like young people, and hold attention with real skill.","Second, a teacher’s influence lasts. Few people remember last month’s videos, but I still remember teachers who took time with me. Admittedly, teachers could learn much from how influencers communicate.","One, teach students to question what they watch. Two, help teachers communicate better. Three, invite positive local role models online.","An influencer can win your attention for a minute, but a teacher can change your whole direction."],
+["O","How should parents and schools manage children’s screen time?","If they do one thing, they should agree on the same simple rules, because mixed messages never work.","First, young children need limits. Sleep, play and face-to-face conversation build what no screen can.","Second, older children need judgement more than control. As I built my own learning app, I found the screen itself isn’t the issue. What you do with it is.","One, keep screens out of bedrooms at night. Two, set a family and school agreement. Three, talk about what children watch.","Let’s not only take the screen away. Let’s teach children when to put it down."]
+]
+};
+const SPEECHES={
+A:["Online learning can completely replace traditional classrooms.",[
+["Position","Ladies and gentlemen, members of the jury: can a video teach you to swim? [pause] It can show you the movement. It cannot get you wet. So I disagree, and the word I disagree with is “completely”. Online learning can extend the classroom. It cannot replace it, for two reasons."],
+["Raison 1","First, online learning depends on what a student already has. Today, from Benin, I am following NASA’s online training in remote sensing, free of charge. Ten years ago, that was unthinkable. But it only works because I have a connection, a laptop, and the discipline a real classroom gave me. A tool that only works for those who already have everything does not close the gap. It widens it."],
+["Raison 2","Second, a classroom teaches what a screen cannot. Last April, I volunteered as a tutor in fluid mechanics. A video can explain an equation. Only a person can see in your face that you are lost, stop, and try another way. Admittedly, online courses are cheaper and reach more people. That is precisely why we should keep them, in the right place."],
+["Trois mesures et fin","So what should we do? One: put the lectures online. Two: use classroom time for practice and projects. Three: invest in connection, so that no student is left behind. Let’s not replace teachers with screens. Let’s give teachers better screens. Thank you."]]],
+T:["What do you think about the use of artificial intelligence in schools?",[
+["Avis","Good afternoon. Who in this room has already asked an AI for help this week? [regard, pause] Exactly. The question is no longer whether AI will enter our schools. It already has. The one thing I think is this: AI is an excellent assistant and a terrible replacement for your own brain."],
+["Le bon côté","There are two sides to this. On the good side, AI gives every student a patient tutor, at any hour, with instant feedback. Think of a class of eighty students. What that teacher needs is time. If AI corrected the routine exercises, teachers could finally help the students who are struggling."],
+["Le risque","On the other side, there is a real risk. For the previous round of this very competition, I used AI to build my own vocabulary training app. It built the tool in an evening. It could not learn the words for me. That is the line. When AI produces the essay, the work is done, and the learning is not."],
+["Trois règles et fin","So here are three rules. One: allow AI openly, because banning it only teaches students to hide it. Two: ask students to check what it says. Three: grade the process as much as the final product. Let AI do the repetitive work, so that our students can do the thinking. Thank you."]]],
+O:["What should schools do to prepare students for the jobs of the future?",[
+["Réponse","Ladies and gentlemen, how do you prepare someone for a job that does not exist yet? [pause] You cannot teach the job. You can teach the person how to learn it. If schools do one thing, it should be that."],
+["Pourquoi 1","This matters for two reasons. First, the jobs are moving. The World Economic Forum expects 170 million new jobs and 92 million lost by 2030. I lived a small version of this. I studied water and sanitation. In my research at Ganvié, I could measure pollution, but I could not map or predict it. So I moved to hydroinformatics and learned Python."],
+["Pourquoi 2","Second, employers want proof, and a transcript alone is not proof. Last month, with two classmates, I won third place in an innovation prize with a sensor that detects salt water in boreholes. Had we only sat exams, we would never have learned what real customers need."],
+["Trois étapes et fin","So here is how, in three steps. One: teach students how to learn. Two: build every year around one real local problem. Three: bring professionals into the classroom. We cannot predict the jobs of the future. But we can prepare the people who will invent them. Thank you."]]]
+};
+
+const HAND=[
+["0–5 s","Quel type de sujet ?","Agree or disagree, what do you think ou question ouverte : le type te donne la méthode à suivre."],
+["5–12 s","Quel est mon camp ?","Cherche le mot à contester : completely, best, only, always. S’il n’y en a pas, dis ton avis en une phrase."],
+["12–20 s","Qui est concerné ?","Élève, enseignant, famille ou société. Garde-en deux : ce sont tes deux idées."],
+["20–25 s","Quelle histoire ?","Argent ou accès : la bourse Vallet. Compétences ou emploi : SalinWatch. Technologie : ton appli Word Battle."],
+["25–30 s","Que faire, et comment finir ?","Trois actions pour l’école, les enseignants ou parents, l’État ou les entreprises. Puis ta dernière phrase."]
+];
+const USE=[
+["Méthode","Lis la méthode du type une seule fois, puis ferme-la."],
+["Entraînement","Tire un sujet, réponds aux cinq questions, parle en t’enregistrant."],
+["Contrôle","Réécoute-toi, coche la liste et retiens un seul défaut à corriger."],
+["Corrigé","Lis-le seulement après avoir parlé. Garde une idée, sans apprendre le texte."],
+["Vocabulaire","Choisis deux expressions du thème que tu placeras au prochain passage."],
+["Deuxième passage","Refais le même sujet avec ce défaut corrigé, cette idée et ces deux expressions."]
+];
+const HAND_END=[5,12,20,25,30];
+const VIEWS=[["drill","Entraînement"],["methode","Méthode"],["vocabulaire","Vocabulaire"]];
+const main=document.getElementById("main"),tabs=document.getElementById("tabs");
+tabs.innerHTML=VIEWS.map(v=>`<a href="#${v[0]}" data-v="${v[0]}">${v[1]}</a>`).join("");
+const ALLQ=THEMES.flatMap(t=>SUBJECTS[t.id].map(q=>({f:q[0],q:q[1],c:q.slice(2),theme:t})));
+const SPANS=[25,70,115,140,150];
+const state={type:"all",theme:"all",q:ALLQ[15],phase:"idle",t0:0,elapsed:0,running:false,beeped:{},lock:null};
+let audio=null;
+
+function route(){
+  const h=location.hash.slice(1),v=VIEWS.some(x=>x[0]===h)?h:"drill";
+  if(state.running){stopTimer();state.phase="idle"}
+  tabs.querySelectorAll("a").forEach(a=>{if(a.dataset.v===v)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});
+  ({drill:renderDrill,methode:renderMethode,vocabulaire:renderVocab})[v]();
+}
+function beep(f,d=.18){try{if(!audio)return;const o=audio.createOscillator(),g=audio.createGain();o.frequency.value=f;g.gain.value=.15;o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d)}catch(e){}}
+const fmt=s=>{s=Math.max(0,Math.floor(s));return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")};
+function draw(){
+  const pool=ALLQ.filter(q=>(state.type==="all"||q.f===state.type)&&(state.theme==="all"||q.theme.id===state.theme));
+  let n=pool[Math.floor(Math.random()*pool.length)],i=0;
+  while(pool.length>1&&n===state.q&&i++<20)n=pool[Math.floor(Math.random()*pool.length)];
+  state.q=n;state.phase="idle";renderDrill();
+}
+function startPrep(){
+  try{audio=audio||new (window.AudioContext||window.webkitAudioContext)();audio.resume()}catch(e){}
+  try{navigator.wakeLock&&navigator.wakeLock.request("screen").then(l=>state.lock=l).catch(()=>{})}catch(e){}
+  state.phase="prep";state.t0=performance.now();state.running=true;renderDrill();tick();
+}
+function startSpeech(){state.phase="speak";state.t0=performance.now();state.beeped={};beep(1200,.3);renderDrill()}
+function stopTimer(){state.running=false;try{state.lock&&state.lock.release()}catch(e){}state.lock=null}
+function endSpeech(){state.elapsed=(performance.now()-state.t0)/1000;stopTimer();state.phase="review";renderDrill()}
+function tick(){
+  if(!state.running)return;
+  const s=(performance.now()-state.t0)/1000,clock=document.getElementById("clock"),st=document.getElementById("st");
+  if(clock){
+    if(state.phase==="prep"){
+      clock.textContent=fmt(Math.ceil(30-s));
+      const hi=HAND_END.findIndex(x=>s<x);
+      document.querySelectorAll(".steps li").forEach((l,i)=>l.classList.toggle("on",i===hi));
+      if(s>=30){startSpeech();requestAnimationFrame(tick);return}
+    }else{
+      clock.textContent=fmt(s);
+      const z=s<120?["zone-short","Continue : minimum 2:00"]:s<140?["zone-good","Bonne zone"]:s<170?["zone-late","Conclus maintenant"]:s<180?["zone-late","Dernière phrase"]:["zone-over","Temps dépassé"];
+      clock.className="clock "+z[0];st.className="status "+z[0];st.textContent=z[1];
+      const idx=SPANS.findIndex(x=>s<x),cur=idx<0?4:idx;
+      document.querySelectorAll(".steps li").forEach((l,i)=>l.classList.toggle("on",i===cur));
+      [[120,880,1],[140,880,2],[180,330,1]].forEach(([at,f,n])=>{if(s>=at&&!state.beeped[at]){state.beeped[at]=1;for(let i=0;i<n;i++)setTimeout(()=>beep(f),i*260)}});
+    }
+  }
+  requestAnimationFrame(tick);
+}
+const corrige=q=>`<ol class="steps">${FAM[q.f].steps.map((s,i)=>`<li><span class="t">${s[0]}</span><span><b>${s[1]}</b><span class="en">${q.c[i]}</span></span></li>`).join("")}</ol><p class="src">Corrigé proposé, pas une réponse officielle. Un autre camp reste valable s’il est clair et bien défendu. Remplace les exemples qui ne sont pas exacts pour toi.</p>`;
+const stepsHtml=f=>`<ol class="steps">${FAM[f].steps.map(s=>`<li><span class="t">${s[0]}</span><span>${s[1]}</span></li>`).join("")}</ol>`;
+function renderDrill(){
+  const q=state.q,fam=FAM[q.f];
+  let body="";
+  if(state.phase==="idle")body=`
+    <div class="btns"><button class="b" id="go">Lancer les 30 secondes</button><button class="b alt" id="again">Autre sujet</button></div>
+    <p class="src">Lance d’abord le dictaphone de ton téléphone.</p>
+    <details class="flat"><summary>Voir le corrigé sans m’entraîner</summary><div class="inner">${corrige(q)}</div></details>`;
+  if(state.phase==="prep")body=`
+    <div class="clock" id="clock">0:30</div>
+    <ol class="steps">${HAND.map(h=>`<li><span class="t">${h[0]}</span><span><b>${h[1]}</b></span></li>`).join("")}</ol>
+    <div class="btns"><button class="b alt" id="skip">Commencer maintenant</button></div>`;
+  if(state.phase==="speak")body=`
+    <div class="clock" id="clock">0:00</div><div class="status" id="st"></div>
+    ${stepsHtml(q.f)}
+    <p class="src">Un bip à 2:00, deux à 2:20, un grave à 3:00.</p>
+    <div class="btns"><button class="b" id="end">Terminer</button></div>`;
+  if(state.phase==="review"){
+    const e=state.elapsed,v=e<120?`Trop court : ${fmt(e)}. Le minimum est 2:00.`:e>180?`Trop long : ${fmt(e)}. Le maximum est 3:00.`:`Durée valable : ${fmt(e)}.`;
+    body=`<p><b>${v}</b> Réécoute-toi, puis coche ce qui est vrai.</p>
+    <div class="checks">${["Ma position est claire dès le début.","J’ai annoncé puis numéroté mes idées.","J’ai donné un exemple vrai.","J’ai fait des pauses au lieu de dire « euh ».","J’ai regardé mon public et fini sur une phrase nette."].map((c,i)=>`<label><input type="checkbox" id="chk${i}"><span>${c}</span></label>`).join("")}</div>
+    <div class="stack"><span class="label">Corrigé du sujet</span>${corrige(q)}</div>
+    <div class="stack"><span class="label">Vocabulaire à placer</span><div class="vocab">${q.theme.vocab.map(w=>`<span>${w[0]}</span>`).join("")}</div></div>
+    <p class="tip"><b>Avant de refaire :</b> garde un défaut à corriger, une idée du corrigé et deux expressions du vocabulaire.</p>
+    <div class="btns"><button class="b" id="redo">Refaire ce sujet</button><button class="b alt" id="again">Nouveau sujet</button></div>`;
+  }
+  const locked=state.phase==="prep"||state.phase==="speak";
+  main.innerHTML=`<div class="view">
+    ${locked?"":`<div class="filters">
+      <label><span class="label">Type</span><select id="ft"><option value="all">Tous</option>${Object.keys(FAM).map(k=>`<option value="${k}" ${state.type===k?"selected":""}>${FAM[k].name}</option>`).join("")}</select></label>
+      <label><span class="label">Thème</span><select id="fh"><option value="all">Tous</option>${THEMES.map(t=>`<option value="${t.id}" ${state.theme===t.id?"selected":""}>${t.name.replace(/^Education( and|,) /,"")}</option>`).join("")}</select></label>
+    </div>`}
+    <section class="panel"><span class="label">${fam.name} · ${q.theme.name}</span><div class="question">${q.q}</div>${body}</section>
+  </div>`;
+  const on=(id,f)=>{const e=document.getElementById(id);if(e)e.onclick=f};
+  on("go",startPrep);on("again",draw);on("skip",startSpeech);on("end",endSpeech);on("redo",()=>{state.phase="idle";renderDrill()});
+  const ft=document.getElementById("ft"),fh=document.getElementById("fh");
+  if(ft)ft.onchange=()=>{state.type=ft.value;draw()};
+  if(fh)fh.onchange=()=>{state.theme=fh.value;draw()};
+}
+function renderMethode(){
+  main.innerHTML=`<div class="view">
+  <section class="panel"><h2>Cadre de réflexion : une main, cinq questions</h2>
+    <p>Pendant les 30 secondes, pose-toi ces questions dans l’ordre, une par doigt. Tes réponses remplissent la méthode : tu n’as plus à chercher quoi dire.</p>
+    <ol class="steps">${HAND.map(h=>`<li><span class="t">${h[0]}</span><span><b>${h[1]}</b><span class="en">${h[2]}</span></span></li>`).join("")}</ol>
+  </section>
+  <section class="panel"><h2>Utiliser les ressources</h2>
+    <p>Suis cet ordre pour chaque sujet. Un sujet se travaille en deux passages, environ 10 minutes au total.</p>
+    <ol class="steps">${USE.map((u,i)=>`<li><span class="t">${i+1}</span><span><b>${u[0]}</b><span class="en">${u[1]}</span></span></li>`).join("")}</ol>
+  </section>
+  <section class="panel"><h2>Une seule charpente</h2>
+    <p>Une idée, deux développements, trois actions : c’est le 3-2-1 de Vinh Giang, que j’enchaîne pour tenir 2:30. Seules les phrases changent selon le type de sujet.</p>
+    <ul><li><b>Sur scène :</b> deux secondes de silence avant de parler, un juré par phrase, des doigts pour « two reasons » et « three steps », une pause à la place de « euh ».</li>
+    <li><b>En cas de blanc :</b> « Let me give you a concrete example », puis une de tes histoires.</li></ul>
+  </section>
+  ${Object.keys(FAM).map(k=>`<section class="panel"><h2>${FAM[k].name}</h2>
+    <ol class="steps">${FAM[k].steps.map(s=>`<li><span class="t">${s[0]}</span><span><b>${s[1]}</b><span class="en">${s[2]}</span></span></li>`).join("")}</ol>
+    <p>${FAM[k].tip}</p>
+    <details class="flat"><summary>Exemple : ${SPEECHES[k][0]}</summary><div class="inner">${SPEECHES[k][1].map(p=>`<p><span class="tag">${p[0]}</span>${p[1]}</p>`).join("")}<p class="src">Inspire-toi de la charpente sans réciter le texte.</p></div></details>
+  </section>`).join("")}
+  </div>`;
+}
+function renderVocab(){
+  main.innerHTML=`<div class="view">
+  ${THEMES.map((t,i)=>`<details ${i===0?"open":""}><summary>${t.name}</summary><div class="inner">
+    <div class="scroll"><table>${t.vocab.map(w=>`<tr><td>${w[0]}</td><td>${w[1]}</td></tr>`).join("")}</table></div>
+    <div class="stack"><span class="label">Phrases prêtes</span>${t.phrases.map(p=>`<p class="phrase">${p}</p>`).join("")}</div>
+  </div></details>`).join("")}
+  </div>`;
+}
+addEventListener("hashchange",route);
+route();
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+</script>
+</body>
+</html>
