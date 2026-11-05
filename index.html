@@ -100,24 +100,15 @@ main a{color:var(--accent);font-weight:600}
 <script>
 const FAM={
 A:{name:"Agree or disagree",formula:"Mon camp → 2 raisons → 3 acteurs",
- one:["Mon camp","My answer is clear: I disagree, and for me, the one thing that matters most is the word “completely”."],
- two:["Élève / Société","Consider, first, the student. … Let us now turn to society. …"],
- three:["Écoles / Enseignants / État","I would suggest three steps. First, schools should … Next, teachers should … Finally, governments should …"],
- close:"So, to return to the question we started with: my answer remains [ton camp]. Thank you.",
- note:"Concession obligatoire dans la raison 2 : “Of course, some would argue that …. There is some truth in that, but …”",
+ one:"Mon camp",two:"Élève / Société",three:"Écoles / Enseignants / État",
+ note:"Choisis un camp net. La concession est obligatoire dans la raison 2.",
  ex:["Le mot « completely »","Élève : il faut un humain qui voit qu’on est perdu. Société : sans connexion, l’écart se creuse.","Écoles : cours en ligne, pratique en classe. Enseignants : formés. État : connexion."]},
-T:{name:"What do you think about…?",formula:"Mon avis → bon / risque → Keep, Fix, Measure",
- one:["Mon avis","My view is simple: I see it as …, provided that …"],
- two:["Le bon / Le risque","Let me begin with what we stand to gain. … However, there is also a real risk. …"],
- three:["Keep / Fix / Measure","I would suggest three steps. First, let us keep … Next, let us fix … Finally, let us measure …"],
- close:"So, to return to the question we started with: I see it as [ton avis], provided that [la condition]. Thank you.",
- note:"Les deux côtés servent ton avis : finis toujours par le camp que tu as annoncé.",
- ex:["Bon assistant, mauvais cerveau","Le bon : un tuteur à toute heure, du temps pour l’enseignant. Le risque : le devoir est fait, sans apprentissage.","Keep : l’assistant. Fix : la triche, avec un oral. Measure : ce que l’élève sait expliquer."]},
+T:{name:"What do you think about…?",formula:"Mon avis → gain / risque → Keep, Fix, Measure",
+ one:"Mon avis",two:"Le gain / Le risque",three:"Keep / Fix / Measure",
+ note:"Les deux côtés servent ton avis : finis toujours par la condition annoncée au début.",
+ ex:["Bon assistant, à une condition","Le gain : un tuteur à toute heure, du temps pour l’enseignant. Le risque : le devoir est fait, sans apprentissage.","Keep : le tuteur. Fix : la triche, avec un oral. Measure : ce que l’élève sait expliquer."]},
 O:{name:"Question ouverte",formula:"Ma solution → moyens / mentalités → Start, Train, Measure",
- one:["Ma solution","My answer is simple: if we do only one thing, it should be …"],
- two:["Moyens / Mentalités","Let me begin with the means. … However, nothing would change without a shift in mindset. …"],
- three:["Start / Train / Measure","I would suggest three steps. First, we can start with … Next, we need to train … Finally, we must measure …"],
- close:"So, to return to the question we started with: if we do only one thing, it should be [ta solution]. Thank you.",
+ one:"Ma solution",two:"Moyens / Mentalités",three:"Start / Train / Measure",
  note:"Donne des actions concrètes : qui fait quoi, et où.",
  ex:["Apprendre à apprendre","Moyens : peu de projets réels. Mentalités : l’examen reste le but.","Start : un projet local par an. Train : les enseignants, avec des professionnels. Measure : ce que l’élève sait faire."]}
 };
@@ -294,19 +285,19 @@ O:["What should schools do to prepare students for the jobs of the future?","Tod
 "So, to return to the question we started with: if we do only one thing, it should be {to teach students how to learn}. And if there is one thing I would like you to remember today, it is this: {we cannot predict the jobs of the future, but we can prepare the people who will invent them}. Thank you."]]
 };
 const fill=t=>t.replace(/\{(.+?)\}/g,'<mark class="blank">$1</mark>');
-const VIEWS=[["drill","Entraînement"],["methode","Méthode"],["trame","Trame"],["vocabulaire","Vocabulaire"]];
+const VIEWS=[["drill","Entraînement"],["methode","Méthode"],["vocabulaire","Vocabulaire"]];
 const main=document.getElementById("main"),tabs=document.getElementById("tabs");
 tabs.innerHTML=VIEWS.map(v=>`<a href="#${v[0]}" data-v="${v[0]}">${v[1]}</a>`).join("");
 const ALLQ=THEMES.flatMap(t=>SUBJECTS[t.id].map(q=>({f:q[0],q:q[1],c:q.slice(2),theme:t})));
 const SPANS=[25,70,115,140,150];
-const state={type:"all",theme:"all",q:ALLQ[15],phase:"idle",t0:0,elapsed:0,running:false,beeped:{},lock:null,showTrame:true,trameType:"A"};
+const state={type:"all",theme:"all",q:ALLQ[15],phase:"idle",t0:0,elapsed:0,running:false,beeped:{},lock:null,showTrame:true,methodType:"A"};
 let audio=null;
 
 function route(){
   const h=location.hash.slice(1),v=VIEWS.some(x=>x[0]===h)?h:"drill";
   if(state.running){stopTimer();state.phase="idle"}
   tabs.querySelectorAll("a").forEach(a=>{if(a.dataset.v===v)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});
-  ({drill:renderDrill,methode:renderMethode,trame:renderTrame,vocabulaire:renderVocab})[v]();
+  ({drill:renderDrill,methode:renderMethode,vocabulaire:renderVocab})[v]();
 }
 function beep(f,d=.18){try{if(!audio)return;const o=audio.createOscillator(),g=audio.createGain();o.frequency.value=f;g.gain.value=.15;o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d)}catch(e){}}
 const fmt=s=>{s=Math.max(0,Math.floor(s));return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")};
@@ -346,42 +337,18 @@ function tick(){
 }
 const CORR=[["0:25","One thing"],["0:45","Two : idée 1"],["0:45","Two : idée 2"],["0:25","Three steps"],["0:10","Fin"]];
 const corrige=q=>`<ol class="steps">${CORR.map((c,i)=>`<li><span class="t">${c[0]}</span><span><b>${c[1]}</b><span class="en">${q.c[i]}</span></span></li>`).join("")}</ol><p class="src">Corrigé proposé, pas une réponse officielle : il suit le 1-2-3, avec des idées adaptées au sujet. Remplace les exemples qui ne sont pas exacts pour toi.</p>`;
-const prepGrid=f=>`<ol class="steps">${[["10 s","1",FAM[f].one[0]],["10 s","2",FAM[f].two[0]],["10 s","3",FAM[f].three[0]]].map(r=>`<li><span class="t">${r[0]}</span><span><b>${r[1]} · ${r[2]}</b></span></li>`).join("")}</ol><p class="status">Un mot par case, rien de plus.</p>`;
+const prepGrid=f=>`<ol class="steps">${[["10 s","1",FAM[f].one],["10 s","2",FAM[f].two],["10 s","3",FAM[f].three]].map(r=>`<li><span class="t">${r[0]}</span><span><b>${r[1]} · ${r[2]}</b></span></li>`).join("")}</ol><p class="status">Un mot par case, rien de plus.</p>`;
 const speakGrid=f=>{
   const timed=[];TRAME[f].forEach(r=>{if(r[0])timed.push([r[0],r[1],r[2]]);else timed[timed.length-1][2]+=" "+r[2]});
   return `<ol class="steps">${timed.map(r=>`<li><span class="t">${r[0]}</span><span><b>${r[1]}</b>${state.showTrame?`<span class="en">${r[2].replace(/\{.+?\}/g,"…").replace(/…\./g,"…")}</span>`:""}</span></li>`).join("")}</ol>`;
 };
-function renderTrame(){
-  const k=state.trameType,ex=TRAME_EX[k];
-  main.innerHTML=`<div class="view">
-  <section class="panel"><h2>Ta trame de discours</h2>
-    <p>Le texte normal est déjà écrit : dis-le tel quel. Tu ne réfléchis qu’aux <mark class="blank">parties surlignées</mark>, c’est-à-dire tes idées.</p>
-    <ol class="steps">
-      <li><span class="t">1</span><span>Choisis le type de sujet.</span></li>
-      <li><span class="t">2</span><span>Choisis une ouverture.</span></li>
-      <li><span class="t">3</span><span>Suis les phrases de passage dans l’ordre, en remplissant les parties surlignées.</span></li></ol>
-  </section>
-  <div class="chips" id="tt">${Object.keys(FAM).map(f=>`<button class="b ${f===k?"":"alt"}" data-f="${f}">${FAM[f].name}</button>`).join("")}</div>
-  <section class="panel"><h2>Étape 1 : choisis ton ouverture</h2>
-    <ol class="steps">${OPENINGS.map(o=>`<li class="opt"><span><b>${o[0]}</b><span class="en">${o[1]}</span><span class="line">${fill(o[2])}</span></span></li>`).join("")}</ol>
-    <p class="src">Après l’ouverture, marque une pause de deux secondes.</p>
-  </section>
-  <section class="panel"><h2>Étape 2 : suis le fil</h2>
-    <ol class="steps">${TRAME[k].map(r=>`<li><span class="t">${r[0]}</span><span><b>${r[1]}</b><span class="line">${fill(r[2])}</span></span></li>`).join("")}</ol>
-  </section>
-  <details><summary>Exemple rempli : ${ex[0]}</summary><div class="inner">
-    <p class="line">${fill(ex[1])}</p>${ex[2].map(t=>`<p class="line">${fill(t)}</p>`).join("")}
-    <p class="src">Remplace les exemples qui ne sont pas exacts pour toi.</p></div></details>
-  </div>`;
-  document.querySelectorAll("#tt button").forEach(b=>b.onclick=()=>{state.trameType=b.dataset.f;renderTrame()});
-}
 function renderDrill(){
   const q=state.q,fam=FAM[q.f];
   let body="";
   if(state.phase==="idle")body=`
     <div class="btns"><button class="b" id="go">Lancer les 30 secondes</button><button class="b alt" id="again">Autre sujet</button></div>
-    <label class="toggle"><input type="checkbox" id="st2" ${state.showTrame?"checked":""}> Afficher les phrases de la trame pendant le discours</label>
-    <p class="src">Lance d’abord le dictaphone de ton téléphone. Décoche la trame dès que tu la connais : le jour J, tu ne l’auras pas sous les yeux.</p>
+    <label class="toggle"><input type="checkbox" id="st2" ${state.showTrame?"checked":""}> Afficher les phrases de la méthode pendant le discours</label>
+    <p class="src">Lance d’abord le dictaphone de ton téléphone. Décoche les phrases dès que tu les connais : le jour J, tu ne l’auras pas sous les yeux.</p>
     <details class="flat"><summary>Voir le corrigé sans m’entraîner</summary><div class="inner">${corrige(q)}</div></details>`;
   if(state.phase==="prep")body=`
     <div class="clock" id="clock">0:30</div>
@@ -417,31 +384,41 @@ function renderDrill(){
   if(fh)fh.onchange=()=>{state.theme=fh.value;draw()};
 }
 function renderMethode(){
-  const block=(n,label,kw,en)=>`<li><span class="n">${n}</span><span><span class="tag">${label}</span><b>${kw}</b><span class="en">${en}</span></span></li>`;
+  const k=state.methodType,F=FAM[k],ex=TRAME_EX[k];
+  const block=(n,label,kw)=>`<li><span class="n">${n}</span><span><span class="tag">${label}</span><b>${kw}</b></span></li>`;
   main.innerHTML=`<div class="view">
   <section class="panel"><h2>Le 3-2-1 de Vinh Giang</h2>
     <p><b>One thing, two types, three steps.</b> Son exemple sur l’avocat : une chose (excellent pour le régime keto), deux façons de le manger (écrasé ou comme un fruit), trois étapes (couper, écraser, assaisonner).</p>
-    <p>Les phrases à dire entre les idées sont dans l’onglet <a href="#trame">Trame</a>.</p>
-    <p>En 30 secondes, tu remplis seulement ces trois cases : <b>10 s pour le 1, 10 s pour le 2, 10 s pour le 3</b>. Le cadre de chaque type est déjà choisi.</p>
-    <ul><li><b>Le 2 :</b> pour chaque idée, dis le point, la preuve, la conséquence : “…. Take, for instance, …. As a result, …”.</li>
-    <li><b>Ton histoire :</b> toujours dans la deuxième idée. Argent ou accès : Vallet. Travail : SalinWatch. Technologie : ton appli.</li>
-    <li><b>Le temps :</b> 1 jusqu’à 0:25, 2 jusqu’à 1:55, 3 jusqu’à 2:20, fin à 2:30.</li></ul>
-    <p class="src">Le 3-2-1 est de Vinh Giang, qui conseille d’en choisir un seul pour une réponse courte. L’enchaînement des trois et les cases fixes par type sont mon adaptation, pour tenir 2 à 3 minutes.</p>
+    <p><b>En 30 secondes,</b> remplis les trois cases de ton type : 10 s pour le 1, 10 s pour le 2, 10 s pour le 3.</p>
+    <p><b>En parlant,</b> dis le texte normal tel quel. Tu ne réfléchis qu’aux <mark class="blank">parties surlignées</mark>, c’est-à-dire tes idées.</p>
+    <p><b>Ton histoire</b> va toujours dans la deuxième idée. Argent ou accès : Vallet. Travail : SalinWatch. Technologie : ton appli.</p>
+    <p class="src">Le 3-2-1 est de Vinh Giang, qui conseille d’en choisir un seul pour une réponse courte. L’enchaînement des trois, les cases fixes et les phrases sont mon adaptation, pour tenir 2 à 3 minutes.</p>
   </section>
-  ${Object.keys(FAM).map(k=>{const F=FAM[k];return `<section class="panel"><h2>${F.name}</h2>
+  <div class="chips" id="tt">${Object.keys(FAM).map(f=>`<button class="b ${f===k?"":"alt"}" data-f="${f}">${FAM[f].name}</button>`).join("")}</div>
+  <section class="panel"><h2>1. Tes trois cases</h2>
     <p class="formula">${F.formula}</p>
-    <ol class="f123">${block(1,"One thing",F.one[0],F.one[1])}${block(2,"Two types",F.two[0],F.two[1])}${block(3,"Three steps",F.three[0],F.three[1])}</ol>
-    <p><b>Fin :</b> ${F.close}</p>
+    <ol class="f123">${block(1,"One thing",F.one)}${block(2,"Two types",F.two)}${block(3,"Three steps",F.three)}</ol>
     <p class="tip">${F.note}</p>
-    <details class="flat"><summary>Exemple rempli : ${TRAME_EX[k][0]}</summary><div class="inner">
-      <ol class="f123">${block(1,"Dans ta tête, en 10 s",F.ex[0],"")}${block(2,"Dans ta tête, en 10 s",F.ex[1],"")}${block(3,"Dans ta tête, en 10 s",F.ex[2],"")}</ol>
-      <p class="src">La version à l’oral se trouve dans l’onglet <a href="#trame">Trame</a>.</p></div></details>
-  </section>`}).join("")}
+  </section>
+  <section class="panel"><h2>2. Ton ouverture</h2>
+    <ol class="steps">${OPENINGS.map(o=>`<li class="opt"><span><b>${o[0]}</b><span class="en">${o[1]}</span><span class="line">${fill(o[2])}</span></span></li>`).join("")}</ol>
+    <p class="src">Choisis-en une par défaut. Marque ensuite une pause de deux secondes.</p>
+  </section>
+  <section class="panel"><h2>3. Ton fil, de 0:00 à 2:30</h2>
+    <ol class="steps">${TRAME[k].map(r=>`<li><span class="t">${r[0]}</span><span><b>${r[1]}</b><span class="line">${fill(r[2])}</span></span></li>`).join("")}</ol>
+  </section>
+  <details><summary>Exemple rempli : ${ex[0]}</summary><div class="inner">
+    <span class="label">Dans ta tête, en 30 secondes</span>
+    <ol class="f123">${block(1,"One thing",F.ex[0])}${block(2,"Two types",F.ex[1])}${block(3,"Three steps",F.ex[2])}</ol>
+    <span class="label">À l’oral</span>
+    <p class="line">${fill(ex[1])}</p>${ex[2].map(t=>`<p class="line">${fill(t)}</p>`).join("")}
+    <p class="src">Remplace les exemples qui ne sont pas exacts pour toi.</p></div></details>
   <details><summary>Sur scène et en cas de blanc</summary><div class="inner"><ul>
     <li>Deux secondes de silence avant de parler.</li><li>Un juré par phrase.</li><li>Montre 1, 2 et 3 avec les doigts.</li><li>Une pause à la place de « euh ».</li><li><b>Blanc :</b> “Let me give you a concrete example”, puis ton histoire.</li></ul></div></details>
   <details><summary>Comment s’entraîner avec cette page</summary><div class="inner">
     <ol class="steps">${USE.map((u,i)=>`<li><span class="t">${i+1}</span><span><b>${u[0]}</b><span class="en">${u[1]}</span></span></li>`).join("")}</ol></div></details>
   </div>`;
+  document.querySelectorAll("#tt button").forEach(b=>b.onclick=()=>{state.methodType=b.dataset.f;renderMethode()});
 }
 function renderVocab(){
   main.innerHTML=`<div class="view">
