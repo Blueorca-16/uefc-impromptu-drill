@@ -100,24 +100,24 @@ main a{color:var(--accent);font-weight:600}
 <script>
 const FAM={
 A:{name:"Agree or disagree",formula:"Mon camp → 2 raisons → 3 acteurs",
- one:["Mon camp","I disagree. The one thing that matters here is the word “completely”."],
- two:["Élève / Société","There are two reasons. For students, … For society, …"],
- three:["Écoles / Enseignants / État","So, three steps. First, schools should … Then, teachers should … Finally, the government should …"],
- close:"So my answer is no: [ton camp en une phrase]. Thank you.",
- note:"Concession obligatoire dans la raison 2 : “Admittedly, …, but …”",
+ one:["Mon camp","My answer is clear: I disagree, and for me, the one thing that matters most is the word “completely”."],
+ two:["Élève / Société","Consider, first, the student. … Let us now turn to society. …"],
+ three:["Écoles / Enseignants / État","I would suggest three steps. First, schools should … Next, teachers should … Finally, governments should …"],
+ close:"So, to return to the question we started with: my answer remains [ton camp]. Thank you.",
+ note:"Concession obligatoire dans la raison 2 : “Of course, some would argue that …. There is some truth in that, but …”",
  ex:["Le mot « completely »","Élève : il faut un humain qui voit qu’on est perdu. Société : sans connexion, l’écart se creuse.","Écoles : cours en ligne, pratique en classe. Enseignants : formés. État : connexion."]},
 T:{name:"What do you think about…?",formula:"Mon avis → bon / risque → Keep, Fix, Measure",
- one:["Mon avis","The one thing I think about this is that it is a useful tool, on one condition."],
- two:["Le bon / Le risque","There are two sides to this. On the good side, … On the other side, …"],
- three:["Keep / Fix / Measure","So, three steps. Keep what works: … Fix the risk: … Measure the result: …"],
- close:"So yes, on one condition: [ton avis en une phrase]. Thank you.",
+ one:["Mon avis","My view is simple: I see it as …, provided that …"],
+ two:["Le bon / Le risque","Let me begin with what we stand to gain. … However, there is also a real risk. …"],
+ three:["Keep / Fix / Measure","I would suggest three steps. First, let us keep … Next, let us fix … Finally, let us measure …"],
+ close:"So, to return to the question we started with: I see it as [ton avis], provided that [la condition]. Thank you.",
  note:"Les deux côtés servent ton avis : finis toujours par le camp que tu as annoncé.",
  ex:["Bon assistant, mauvais cerveau","Le bon : un tuteur à toute heure, du temps pour l’enseignant. Le risque : le devoir est fait, sans apprentissage.","Keep : l’assistant. Fix : la triche, avec un oral. Measure : ce que l’élève sait expliquer."]},
 O:{name:"Question ouverte",formula:"Ma solution → moyens / mentalités → Start, Train, Measure",
- one:["Ma solution","If we do one thing, it should be …"],
- two:["Moyens / Mentalités","The problem comes in two types. First, a lack of means: … Second, a question of mindset: …"],
- three:["Start / Train / Measure","So, three steps. Start small: … Train the people: … Measure the result: …"],
- close:"[Une image du résultat]. Thank you.",
+ one:["Ma solution","My answer is simple: if we do only one thing, it should be …"],
+ two:["Moyens / Mentalités","Let me begin with the means. … However, nothing would change without a shift in mindset. …"],
+ three:["Start / Train / Measure","I would suggest three steps. First, we can start with … Next, we need to train … Finally, we must measure …"],
+ close:"So, to return to the question we started with: if we do only one thing, it should be [ta solution]. Thank you.",
  note:"Donne des actions concrètes : qui fait quoi, et où.",
  ex:["Apprendre à apprendre","Moyens : peu de projets réels. Mentalités : l’examen reste le but.","Start : un projet local par an. Train : les enseignants, avec des professionnels. Measure : ce que l’élève sait faire."]}
 };
@@ -230,26 +230,6 @@ media:[
 ["O","How should parents and schools manage children’s screen time?","If they do one thing, they should agree on the same simple rules, because mixed messages never work.","First, young children need limits. Sleep, play and face-to-face conversation build what no screen can.","Second, older children need judgement more than control. As I built my own learning app, I found the screen itself isn’t the issue. What you do with it is.","One, keep screens out of bedrooms at night. Two, set a family and school agreement. Three, talk about what children watch.","Let’s not only take the screen away. Let’s teach children when to put it down."]
 ]
 };
-const SPEECHES={
-A:["Online learning can completely replace traditional classrooms.",[
-["One thing","Ladies and gentlemen, members of the jury: can a video teach you to swim? [pause] So I disagree, and the one thing that matters here is the word “completely”. Online learning can extend the classroom. It cannot replace it."],
-["Two reasons : l’élève","There are two reasons. For students, learning needs a person. Last April, I volunteered as a tutor in fluid mechanics. A video can explain an equation. Only a person can see in your face that you are lost, stop, and try another way. So a student alone with a screen can fall behind without anyone noticing."],
-["Two reasons : la société","For society, online learning depends on what people already have. Today, from Benin, I am following NASA’s online training, free of charge. But that takes a connection and a laptop. So a tool that only works for those who already have everything widens the gap. Admittedly, online courses are cheaper, but cheap access is not equal access."],
-["Three steps","So, three steps. First, schools should put lectures online and keep class time for practice. Then, teachers should be trained to work that way. Finally, the government should invest in connection, so that no student is left behind."],
-["Fin","So my answer is no. Let’s not replace teachers with screens. Let’s give teachers better screens. Thank you."]]],
-T:["What do you think about the use of artificial intelligence in schools?",[
-["One thing","Good afternoon. Who in this room has asked an AI for help this week? [regard, pause] The one thing I think about AI in schools is that it is an excellent assistant, on one condition: it must never replace the student’s own brain."],
-["Two sides : le bon","There are two sides to this. On the good side, AI gives every student a patient tutor. Think of a class of eighty students. If AI corrected the routine exercises, the teacher would finally have time for those who are struggling. So AI can give teachers back what they lack most: time."],
-["Two sides : le risque","On the other side, it can do the work without the learning. For this competition, I used AI to build my own vocabulary app. It built the tool in an evening. It could not learn the words for me. So when AI writes the essay, the work is done, and the learning is not."],
-["Three steps","So, three steps. Keep what works: AI as a tutor and as a help for teachers. Fix the risk: ask students to defend their work orally. Measure the result: test what students can explain without the tool."],
-["Fin","So yes to AI in schools, as an assistant. Let it do the repetitive work, so that our students can do the thinking. Thank you."]]],
-O:["What should schools do to prepare students for the jobs of the future?",[
-["One thing","Ladies and gentlemen, how do you prepare someone for a job that does not exist yet? [pause] You cannot teach the job. So if schools do one thing, it should be to teach students how to learn."],
-["Two types : les moyens","The problem comes in two types. First, a lack of means: many schools have few laboratories and few real projects. The World Economic Forum expects 170 million new jobs and 92 million lost by 2030. So students need practice with real problems, and not just lectures."],
-["Two types : les mentalités","Second, a question of mindset: we still treat the exam as the goal. Last month, with two classmates, I won third place in an innovation prize with a sensor that detects salt water in boreholes. Had we only sat exams, we would never have learned what real customers need. So employers want proof, and a transcript alone is not proof."],
-["Three steps","So, three steps. Start small: one real local project in every year of study. Train the people: bring professionals to work with teachers. Measure the result: assess what students can do, not what they can recite."],
-["Fin","We cannot predict the jobs of the future. But we can prepare the people who will invent them. Thank you."]]]
-};
 const USE=[
 ["Méthode","Lis une fois le cadre du type."],
 ["Entraînement","Tire un sujet, remplis le 1-2-3 en 30 secondes, parle en t’enregistrant."],
@@ -259,58 +239,59 @@ const USE=[
 ];
 const PREP_END=[10,20,30];
 const OPENINGS=[
-["Question à la salle","Par défaut : elle compte pour l’interaction avec le public.","Let me start with a question: who in this room has ever {lien avec le sujet}?"],
-["Image","Quand le sujet parle d’élèves ou de familles.","Imagine a student who {une situation concrète}."],
-["Souvenir","Quand ton histoire colle au sujet.","A few years ago, {ce qui t’est arrivé}. That moment changed how I see this question."],
-["Constat","Seulement si tu es sûr de ton chiffre.","Today, {un fait ou un chiffre sûr}. That is why this question matters."]
+["Question à la salle","Par défaut : elle compte pour l’interaction avec le public.","Let me begin with a simple question: how many of us have ever {lien avec le sujet}?"],
+["Image","Quand le sujet parle d’élèves ou de familles.","Picture a student who {une situation concrète}."],
+["Souvenir","Quand ton histoire colle au sujet.","A few years ago, {ce qui t’est arrivé}. That experience changed the way I think about this question."],
+["Constat","Seulement si tu es sûr de ton chiffre.","Today, {un fait ou un chiffre sûr}. That alone tells us why this question deserves our attention."]
 ];
+const CLOSE_LINE="And if there is one thing I would like you to remember today, it is this: {ta phrase}. Thank you.";
 const TRAME={
 A:[
-["0:00","Position","So the question today is: {le sujet}. My answer is clear: I {agree / disagree}. The one thing that matters here is {le mot clé}."],
-["","Annonce","I have two reasons: one for students, and one for society."],
-["0:25","Argument 1","Let me start with students. {Ton point}. For example, {ta preuve}. So, {la conséquence}."],
-["1:10","Passage + argument 2","That is the first reason. But this goes beyond one student. Now, think about society. {Ton point}. Let me give you my own example. {Ton histoire}. So, {la conséquence}."],
-["","Concession","Now, some people will say that {l’objection}. That is true, but {ta réponse}."],
-["1:55","Passage + solutions","So what should we do? I see three steps. First, schools should {action}. Second, teachers should {action}. Finally, the government should {action}."],
-["2:20","Fin","So, let me come back to the question. My answer is still {ton camp}. If you remember one thing today, let it be this: {ta phrase}. Thank you."]],
+["0:00","Position","This brings us to today’s question: {le sujet}. My answer is clear: I {agree / disagree}, and for me, the one thing that matters most is {le mot clé}."],
+["","Annonce","Let me explain why, first from the student’s point of view, and then from society’s."],
+["0:25","Argument 1","Consider, first, the student. {Ton point}. Take, for instance, {ta preuve}. As a result, {la conséquence}."],
+["1:10","Passage + argument 2","That is what is at stake for the individual. However, the consequences reach well beyond one student, so let us now turn to society. {Ton point}. I have seen this in my own life. {Ton histoire}. What this shows is that {la conséquence}."],
+["","Concession","Of course, some would argue that {l’objection}. There is some truth in that, but {ta réponse}."],
+["1:55","Passage + solutions","So where do we go from here? I would suggest three steps. First, schools should {action}. Next, teachers should {action}. Finally, governments should {action}."],
+["2:20","Fin","So, to return to the question we started with: my answer remains {ton camp}. "+CLOSE_LINE]],
 T:[
-["0:00","Position","So the question today is: {le sujet}. My view is simple. The one thing I think about it is that it is {ton avis}, on one condition: {la condition}."],
-["","Annonce","There are two sides to this: the good, and the risk."],
-["0:25","Argument 1","Let me start with the good side. {Ton point}. For example, {ta preuve}. So, {la conséquence}."],
-["1:10","Passage + argument 2","That is the good side. But there is a risk we cannot ignore. The risk is that {ton point}. Let me give you my own example. {Ton histoire}. So, {la conséquence}."],
-["1:55","Passage + solutions","So how do we keep the good and avoid the risk? I see three steps. First, keep {ce qui marche}. Second, fix {le risque} by {action}. Finally, measure {le résultat}."],
-["2:20","Fin","So, let me come back to the question. I think it is {ton avis}, on one condition: {la condition}. If you remember one thing today, let it be this: {ta phrase}. Thank you."]],
+["0:00","Position","This brings us to today’s question: {le sujet}. My view is simple: I see it as {ton avis}, provided that {la condition}."],
+["","Annonce","To explain why, let me look at both sides: what we stand to gain, and what we risk losing."],
+["0:25","Argument 1","Let me begin with what we stand to gain. {Ton point}. Take, for instance, {ta preuve}. As a result, {la conséquence}."],
+["1:10","Passage + argument 2","That is the promise. However, there is also a real risk, and we should not ignore it. The danger is that {ton point}. I have seen this in my own life. {Ton histoire}. What this shows is that {la conséquence}."],
+["1:55","Passage + solutions","So how can we keep the benefits while avoiding the risk? I would suggest three steps. First, let us keep {ce qui marche}. Next, let us fix {le risque} by {action}. Finally, let us measure {le résultat}."],
+["2:20","Fin","So, to return to the question we started with: I see it as {ton avis}, provided that {la condition}. "+CLOSE_LINE]],
 O:[
-["0:00","Position","So the question today is: {le sujet}. My answer is simple. If we do one thing, it should be {ta solution}."],
-["","Annonce","Why is this so hard today? The problem comes in two types: means and mindset."],
-["0:25","Argument 1","Let me start with means. Today, {ce qui manque}. For example, {ta preuve}. So, {la conséquence}."],
-["1:10","Passage + argument 2","That is the first problem. But even with all the means in the world, we would still need to change our mindset. Too often, {la mauvaise habitude}. Let me give you my own example. {Ton histoire}. So, {la conséquence}."],
-["1:55","Passage + solutions","So how do we fix this? I see three steps. First, start with {un petit projet}. Second, train {qui}. Finally, measure {le résultat}."],
-["2:20","Fin","So, let me come back to the question. If we do one thing, it should be {ta solution}. If you remember one thing today, let it be this: {ta phrase}. Thank you."]]
+["0:00","Position","This brings us to today’s question: {le sujet}. My answer is simple: if we do only one thing, it should be {ta solution}."],
+["","Annonce","To understand why this is so difficult, we need to look at two kinds of obstacles: a lack of means, and a matter of mindset."],
+["0:25","Argument 1","Let me begin with the means. At the moment, {ce qui manque}. Take, for instance, {ta preuve}. As a result, {la conséquence}."],
+["1:10","Passage + argument 2","That is the practical obstacle. However, even with all the means in the world, nothing would change without a shift in mindset. Too often, {la mauvaise habitude}. I have seen this in my own life. {Ton histoire}. What this shows is that {la conséquence}."],
+["1:55","Passage + solutions","So how do we move forward? I would suggest three steps. First, we can start with {un petit projet}. Next, we need to train {qui}. Finally, we must measure {le résultat}."],
+["2:20","Fin","So, to return to the question we started with: if we do only one thing, it should be {ta solution}. "+CLOSE_LINE]]
 };
 const TRAME_EX={
-A:["Online learning can completely replace traditional classrooms.","Let me start with a question: who in this room has ever {learned to swim by watching a video}?",[
-"So the question today is: {can online learning completely replace traditional classrooms}? My answer is clear: I {disagree}. The one thing that matters here is {the word “completely”}.",
-"I have two reasons: one for students, and one for society.",
-"Let me start with students. {Students need a person, not only a screen}. For example, {when I tutored fluid mechanics, I could see in a classmate’s face that they were lost}. So, {a student alone with a video can fall behind without anyone noticing}.",
-"That is the first reason. But this goes beyond one student. Now, think about society. {Online learning depends on what people already have}. Let me give you my own example. {I follow NASA’s online training from Benin, free of charge, because I have a connection and a laptop}. So, {it can widen the gap}.",
-"Now, some people will say that {online courses are cheaper}. That is true, but {cheap access is not equal access}.",
-"So what should we do? I see three steps. First, schools should {put lectures online and keep class time for practice}. Second, teachers should {be trained to teach that way}. Finally, the government should {invest in connection}.",
-"So, let me come back to the question. My answer is still {no}. If you remember one thing today, let it be this: {let’s give teachers better screens, not replace them with screens}. Thank you."]],
-T:["What do you think about the use of artificial intelligence in schools?","Let me start with a question: who in this room has ever {asked an AI for help with their work}?",[
-"So the question today is: {what do we think about AI in schools}? My view is simple. The one thing I think about it is that it is {an excellent assistant}, on one condition: {it never replaces the student’s own thinking}.",
-"There are two sides to this: the good, and the risk.",
-"Let me start with the good side. {AI gives teachers back time}. For example, {in a class of eighty students, it could correct the routine exercises}. So, {the teacher can help those who are struggling}.",
-"That is the good side. But there is a risk we cannot ignore. The risk is that {the work gets done without the learning}. Let me give you my own example. {I used AI to build a vocabulary app for this competition, but it could not learn the words for me}. So, {we must separate the tool from the learning}.",
-"So how do we keep the good and avoid the risk? I see three steps. First, keep {AI as a tutor}. Second, fix {cheating} by {asking students to defend their work orally}. Finally, measure {what students can explain without the tool}.",
-"So, let me come back to the question. I think it is {an excellent assistant}, on one condition: {it never replaces the student’s thinking}. If you remember one thing today, let it be this: {let AI do the repetitive work, so students can do the thinking}. Thank you."]],
-O:["What should schools do to prepare students for the jobs of the future?","Today, {the World Economic Forum expects 170 million new jobs and 92 million lost by 2030}. That is why this question matters.",[
-"So the question today is: {how do schools prepare students for the jobs of the future}? My answer is simple. If we do one thing, it should be {to teach students how to learn}.",
-"Why is this so hard today? The problem comes in two types: means and mindset.",
-"Let me start with means. Today, {many schools have few laboratories and few real projects}. For example, {a student can finish a course without ever solving a real problem}. So, {they arrive at work with knowledge they have never used}.",
-"That is the first problem. But even with all the means in the world, we would still need to change our mindset. Too often, {we treat the exam as the goal}. Let me give you my own example. {With two classmates, I built SalinWatch, a project on salt water in boreholes, and it taught us what real customers need}. So, {a project can prove what a transcript cannot}.",
-"So how do we fix this? I see three steps. First, start with {one real local project every year}. Second, train {teachers alongside professionals}. Finally, measure {what students can do, not what they can recite}.",
-"So, let me come back to the question. If we do one thing, it should be {to teach students how to learn}. If you remember one thing today, let it be this: {we cannot predict the jobs of the future, but we can prepare the people who will invent them}. Thank you."]]
+A:["Online learning can completely replace traditional classrooms.","Let me begin with a simple question: how many of us have ever {learned to swim by watching a video}?",[
+"This brings us to today’s question: {can online learning completely replace traditional classrooms}? My answer is clear: I {disagree}, and for me, the one thing that matters most is {the word “completely”}.",
+"Let me explain why, first from the student’s point of view, and then from society’s.",
+"Consider, first, the student. {Learning needs a person as well as a screen}. Take, for instance, {my time as a volunteer tutor in fluid mechanics, when I could see in a classmate’s face that they were lost}. As a result, {a student alone with a video can fall behind without anyone noticing}.",
+"That is what is at stake for the individual. However, the consequences reach well beyond one student, so let us now turn to society. {Online learning depends on what people already have}. I have seen this in my own life. {I follow NASA’s online training from Benin, free of charge, because I have a connection and a laptop}. What this shows is that {the same tool can widen the gap for those who have neither}.",
+"Of course, some would argue that {online courses are cheaper}. There is some truth in that, but {cheap access is not the same as equal access}.",
+"So where do we go from here? I would suggest three steps. First, schools should {put lectures online and keep class time for practice}. Next, teachers should {receive training to teach that way}. Finally, governments should {invest in connection}.",
+"So, to return to the question we started with: my answer remains {no}. And if there is one thing I would like you to remember today, it is this: {we should give teachers better screens, not replace them with screens}. Thank you."]],
+T:["What do you think about the use of artificial intelligence in schools?","Let me begin with a simple question: how many of us have ever {asked an AI for help with our work}?",[
+"This brings us to today’s question: {what should we think about artificial intelligence in schools}? My view is simple: I see it as {an excellent assistant}, provided that {it never replaces the student’s own thinking}.",
+"To explain why, let me look at both sides: what we stand to gain, and what we risk losing.",
+"Let me begin with what we stand to gain. {AI gives teachers back their time}. Take, for instance, {a class of eighty students, where AI could correct the routine exercises}. As a result, {the teacher can finally help those who are struggling}.",
+"That is the promise. However, there is also a real risk, and we should not ignore it. The danger is that {the work gets done without any learning}. I have seen this in my own life. {I used AI to build a vocabulary app for this competition, but it could not learn the words for me}. What this shows is that {the tool can never do the student’s part}.",
+"So how can we keep the benefits while avoiding the risk? I would suggest three steps. First, let us keep {AI as a tutor}. Next, let us fix {cheating} by {asking students to defend their work orally}. Finally, let us measure {what students can explain without the tool}.",
+"So, to return to the question we started with: I see it as {an excellent assistant}, provided that {it never replaces the student’s own thinking}. And if there is one thing I would like you to remember today, it is this: {let AI do the repetitive work, so that students can do the thinking}. Thank you."]],
+O:["What should schools do to prepare students for the jobs of the future?","Today, {the World Economic Forum expects 170 million new jobs and 92 million lost by 2030}. That alone tells us why this question deserves our attention.",[
+"This brings us to today’s question: {what should schools do to prepare students for the jobs of the future}? My answer is simple: if we do only one thing, it should be {to teach students how to learn}.",
+"To understand why this is so difficult, we need to look at two kinds of obstacles: a lack of means, and a matter of mindset.",
+"Let me begin with the means. At the moment, {many schools have few laboratories and few real projects}. Take, for instance, {a student who can finish a course without ever solving a real problem}. As a result, {graduates arrive at work with knowledge they have never used}.",
+"That is the practical obstacle. However, even with all the means in the world, nothing would change without a shift in mindset. Too often, {we treat the exam as the goal}. I have seen this in my own life. {With two classmates, I built SalinWatch, a project on salt water in boreholes, and it taught us what real customers need}. What this shows is that {a project can prove what a transcript cannot}.",
+"So how do we move forward? I would suggest three steps. First, we can start with {one real local project every year}. Next, we need to train {teachers alongside professionals}. Finally, we must measure {what students can do, not what they can recite}.",
+"So, to return to the question we started with: if we do only one thing, it should be {to teach students how to learn}. And if there is one thing I would like you to remember today, it is this: {we cannot predict the jobs of the future, but we can prepare the people who will invent them}. Thank you."]]
 };
 const fill=t=>t.replace(/\{(.+?)\}/g,'<mark class="blank">$1</mark>');
 const VIEWS=[["drill","Entraînement"],["methode","Méthode"],["trame","Trame"],["vocabulaire","Vocabulaire"]];
@@ -368,7 +349,7 @@ const corrige=q=>`<ol class="steps">${CORR.map((c,i)=>`<li><span class="t">${c[0
 const prepGrid=f=>`<ol class="steps">${[["10 s","1",FAM[f].one[0]],["10 s","2",FAM[f].two[0]],["10 s","3",FAM[f].three[0]]].map(r=>`<li><span class="t">${r[0]}</span><span><b>${r[1]} · ${r[2]}</b></span></li>`).join("")}</ol><p class="status">Un mot par case, rien de plus.</p>`;
 const speakGrid=f=>{
   const timed=[];TRAME[f].forEach(r=>{if(r[0])timed.push([r[0],r[1],r[2]]);else timed[timed.length-1][2]+=" "+r[2]});
-  return `<ol class="steps">${timed.map(r=>`<li><span class="t">${r[0]}</span><span><b>${r[1]}</b>${state.showTrame?`<span class="en">${r[2].replace(/\{.+?\}/g,"…")}</span>`:""}</span></li>`).join("")}</ol>`;
+  return `<ol class="steps">${timed.map(r=>`<li><span class="t">${r[0]}</span><span><b>${r[1]}</b>${state.showTrame?`<span class="en">${r[2].replace(/\{.+?\}/g,"…").replace(/…\./g,"…")}</span>`:""}</span></li>`).join("")}</ol>`;
 };
 function renderTrame(){
   const k=state.trameType,ex=TRAME_EX[k];
@@ -442,7 +423,7 @@ function renderMethode(){
     <p><b>One thing, two types, three steps.</b> Son exemple sur l’avocat : une chose (excellent pour le régime keto), deux façons de le manger (écrasé ou comme un fruit), trois étapes (couper, écraser, assaisonner).</p>
     <p>Les phrases à dire entre les idées sont dans l’onglet <a href="#trame">Trame</a>.</p>
     <p>En 30 secondes, tu remplis seulement ces trois cases : <b>10 s pour le 1, 10 s pour le 2, 10 s pour le 3</b>. Le cadre de chaque type est déjà choisi.</p>
-    <ul><li><b>Le 2 :</b> pour chaque idée, dis le point, la preuve, la conséquence : “…, for example …, so …”.</li>
+    <ul><li><b>Le 2 :</b> pour chaque idée, dis le point, la preuve, la conséquence : “…. Take, for instance, …. As a result, …”.</li>
     <li><b>Ton histoire :</b> toujours dans la deuxième idée. Argent ou accès : Vallet. Travail : SalinWatch. Technologie : ton appli.</li>
     <li><b>Le temps :</b> 1 jusqu’à 0:25, 2 jusqu’à 1:55, 3 jusqu’à 2:20, fin à 2:30.</li></ul>
     <p class="src">Le 3-2-1 est de Vinh Giang, qui conseille d’en choisir un seul pour une réponse courte. L’enchaînement des trois et les cases fixes par type sont mon adaptation, pour tenir 2 à 3 minutes.</p>
@@ -452,11 +433,9 @@ function renderMethode(){
     <ol class="f123">${block(1,"One thing",F.one[0],F.one[1])}${block(2,"Two types",F.two[0],F.two[1])}${block(3,"Three steps",F.three[0],F.three[1])}</ol>
     <p><b>Fin :</b> ${F.close}</p>
     <p class="tip">${F.note}</p>
-    <details class="flat"><summary>Exemple rempli : ${SPEECHES[k][0]}</summary><div class="inner">
+    <details class="flat"><summary>Exemple rempli : ${TRAME_EX[k][0]}</summary><div class="inner">
       <ol class="f123">${block(1,"Dans ta tête, en 10 s",F.ex[0],"")}${block(2,"Dans ta tête, en 10 s",F.ex[1],"")}${block(3,"Dans ta tête, en 10 s",F.ex[2],"")}</ol>
-      <span class="label">Ce que cela donne à l’oral</span>
-      ${SPEECHES[k][1].map(p=>`<p><span class="tag">${p[0]}</span>${p[1]}</p>`).join("")}
-      <p class="src">Inspire-toi du cadre sans réciter le texte.</p></div></details>
+      <p class="src">La version à l’oral se trouve dans l’onglet <a href="#trame">Trame</a>.</p></div></details>
   </section>`}).join("")}
   <details><summary>Sur scène et en cas de blanc</summary><div class="inner"><ul>
     <li>Deux secondes de silence avant de parler.</li><li>Un juré par phrase.</li><li>Montre 1, 2 et 3 avec les doigts.</li><li>Une pause à la place de « euh ».</li><li><b>Blanc :</b> “Let me give you a concrete example”, puis ton histoire.</li></ul></div></details>
