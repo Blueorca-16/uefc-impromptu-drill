@@ -71,6 +71,11 @@ td:first-child{font-weight:600;width:52%}
 td:last-child{color:var(--muted)}
 ul{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:5px}
 .phrase{font-style:italic}
+.formula{font:600 1.05rem/1.3 var(--display);color:var(--accent)}
+.f123{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.f123 li{display:grid;grid-template-columns:44px minmax(0,1fr);gap:12px;align-items:start}
+.f123 .n{font:800 2.2rem/1 var(--display);color:var(--accent);text-align:center;font-variant-numeric:tabular-nums}
+.f123 .en{display:block;color:var(--muted);font-size:.95rem}
 .tip{background:var(--accent-soft);border-radius:8px;padding:10px 12px}
 .tag{display:block;font-size:.75rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
 </style>
@@ -88,27 +93,27 @@ ul{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:5px}
 
 <script>
 const FAM={
-A:{name:"Agree or disagree",steps:[
-  ["25 s","Position","“Can…? I disagree, and the word I disagree with is ‘completely’. I have two reasons.”"],
-  ["45 s","Raison 1 + exemple","“First, … For example, …”"],
-  ["45 s","Raison 2 + ton histoire + concession","“Second, … Take my own case: … Admittedly, … but …”"],
-  ["25 s","Trois mesures","“So what should we do? One, … Two, … Three, …”"],
-  ["10 s","Fin","“So no: [ta position en une phrase]. Thank you.”"]],
-  tip:"Prends un camp net. Tu peux nuancer sur un seul mot du sujet : completely, always, best, only."},
-T:{name:"What do you think about…?",steps:[
-  ["25 s","Ton avis en une phrase","“Who here has…? The one thing I think about this is: …”"],
-  ["45 s","Le bon côté + exemple","“There are two sides to this. On the good side, … For example, …”"],
-  ["45 s","Le risque + ton histoire","“On the other side, … Take my own case: …”"],
-  ["25 s","Trois règles","“So here are three rules. One, … Two, … Three, …”"],
-  ["10 s","Fin","“So [ton avis en une phrase]. Thank you.”"]],
-  tip:"Ne fais pas une simple liste de pour et de contre : les deux côtés servent ton avis du début."},
-O:{name:"Question ouverte",steps:[
-  ["25 s","Ta réponse en une phrase","“How can we…? If we do one thing, it should be …”"],
-  ["45 s","Pourquoi 1 + exemple","“This matters for two reasons. First, … For example, …”"],
-  ["45 s","Pourquoi 2 + ton histoire","“Second, … I saw this myself: …”"],
-  ["25 s","Trois étapes concrètes","“So here is how, in three steps. One, … Two, … Three, …”"],
-  ["10 s","Fin","“[Une image du résultat]. Thank you.”"]],
-  tip:"Le jury attend une solution. Tes trois étapes doivent dire qui fait quoi."}
+A:{name:"Agree or disagree",formula:"Mon camp → 2 raisons → 3 acteurs",
+ one:["Mon camp","I disagree. The one thing that matters here is the word “completely”."],
+ two:["Élève / Société","There are two reasons. For students, … For society, …"],
+ three:["Écoles / Enseignants / État","So, three steps. First, schools should … Then, teachers should … Finally, the government should …"],
+ close:"So my answer is no: [ton camp en une phrase]. Thank you.",
+ note:"Concession obligatoire dans la raison 2 : “Admittedly, …, but …”",
+ ex:["Le mot « completely »","Élève : il faut un humain qui voit qu’on est perdu. Société : sans connexion, l’écart se creuse.","Écoles : cours en ligne, pratique en classe. Enseignants : formés. État : connexion."]},
+T:{name:"What do you think about…?",formula:"Mon avis → bon / risque → Keep, Fix, Measure",
+ one:["Mon avis","The one thing I think about this is that it is a useful tool, on one condition."],
+ two:["Le bon / Le risque","There are two sides to this. On the good side, … On the other side, …"],
+ three:["Keep / Fix / Measure","So, three steps. Keep what works: … Fix the risk: … Measure the result: …"],
+ close:"So yes, on one condition: [ton avis en une phrase]. Thank you.",
+ note:"Les deux côtés servent ton avis : finis toujours par le camp que tu as annoncé.",
+ ex:["Bon assistant, mauvais cerveau","Le bon : un tuteur à toute heure, du temps pour l’enseignant. Le risque : le devoir est fait, sans apprentissage.","Keep : l’assistant. Fix : la triche, avec un oral. Measure : ce que l’élève sait expliquer."]},
+O:{name:"Question ouverte",formula:"Ma solution → moyens / mentalités → Start, Train, Measure",
+ one:["Ma solution","If we do one thing, it should be …"],
+ two:["Moyens / Mentalités","The problem comes in two types. First, a lack of means: … Second, a question of mindset: …"],
+ three:["Start / Train / Measure","So, three steps. Start small: … Train the people: … Measure the result: …"],
+ close:"[Une image du résultat]. Thank you.",
+ note:"Donne des actions concrètes : qui fait quoi, et où.",
+ ex:["Apprendre à apprendre","Moyens : peu de projets réels. Mentalités : l’examen reste le but.","Start : un projet local par an. Train : les enseignants, avec des professionnels. Measure : ce que l’élève sait faire."]}
 };
 const THEMES=[
 {id:"business",name:"Education and Business",
@@ -221,43 +226,37 @@ media:[
 };
 const SPEECHES={
 A:["Online learning can completely replace traditional classrooms.",[
-["Position","Ladies and gentlemen, members of the jury: can a video teach you to swim? [pause] It can show you the movement. It cannot get you wet. So I disagree, and the word I disagree with is “completely”. Online learning can extend the classroom. It cannot replace it, for two reasons."],
-["Raison 1","First, online learning depends on what a student already has. Today, from Benin, I am following NASA’s online training in remote sensing, free of charge. Ten years ago, that was unthinkable. But it only works because I have a connection, a laptop, and the discipline a real classroom gave me. A tool that only works for those who already have everything does not close the gap. It widens it."],
-["Raison 2","Second, a classroom teaches what a screen cannot. Last April, I volunteered as a tutor in fluid mechanics. A video can explain an equation. Only a person can see in your face that you are lost, stop, and try another way. Admittedly, online courses are cheaper and reach more people. That is precisely why we should keep them, in the right place."],
-["Trois mesures et fin","So what should we do? One: put the lectures online. Two: use classroom time for practice and projects. Three: invest in connection, so that no student is left behind. Let’s not replace teachers with screens. Let’s give teachers better screens. Thank you."]]],
+["One thing","Ladies and gentlemen, members of the jury: can a video teach you to swim? [pause] So I disagree, and the one thing that matters here is the word “completely”. Online learning can extend the classroom. It cannot replace it."],
+["Two reasons : l’élève","There are two reasons. For students, learning needs a person. Last April, I volunteered as a tutor in fluid mechanics. A video can explain an equation. Only a person can see in your face that you are lost, stop, and try another way. So a student alone with a screen can fall behind without anyone noticing."],
+["Two reasons : la société","For society, online learning depends on what people already have. Today, from Benin, I am following NASA’s online training, free of charge. But that takes a connection and a laptop. So a tool that only works for those who already have everything widens the gap. Admittedly, online courses are cheaper, but cheap access is not equal access."],
+["Three steps","So, three steps. First, schools should put lectures online and keep class time for practice. Then, teachers should be trained to work that way. Finally, the government should invest in connection, so that no student is left behind."],
+["Fin","So my answer is no. Let’s not replace teachers with screens. Let’s give teachers better screens. Thank you."]]],
 T:["What do you think about the use of artificial intelligence in schools?",[
-["Avis","Good afternoon. Who in this room has already asked an AI for help this week? [regard, pause] Exactly. The question is no longer whether AI will enter our schools. It already has. The one thing I think is this: AI is an excellent assistant and a terrible replacement for your own brain."],
-["Le bon côté","There are two sides to this. On the good side, AI gives every student a patient tutor, at any hour, with instant feedback. Think of a class of eighty students. What that teacher needs is time. If AI corrected the routine exercises, teachers could finally help the students who are struggling."],
-["Le risque","On the other side, there is a real risk. For the previous round of this very competition, I used AI to build my own vocabulary training app. It built the tool in an evening. It could not learn the words for me. That is the line. When AI produces the essay, the work is done, and the learning is not."],
-["Trois règles et fin","So here are three rules. One: allow AI openly, because banning it only teaches students to hide it. Two: ask students to check what it says. Three: grade the process as much as the final product. Let AI do the repetitive work, so that our students can do the thinking. Thank you."]]],
+["One thing","Good afternoon. Who in this room has asked an AI for help this week? [regard, pause] The one thing I think about AI in schools is that it is an excellent assistant, on one condition: it must never replace the student’s own brain."],
+["Two sides : le bon","There are two sides to this. On the good side, AI gives every student a patient tutor. Think of a class of eighty students. If AI corrected the routine exercises, the teacher would finally have time for those who are struggling. So AI can give teachers back what they lack most: time."],
+["Two sides : le risque","On the other side, it can do the work without the learning. For this competition, I used AI to build my own vocabulary app. It built the tool in an evening. It could not learn the words for me. So when AI writes the essay, the work is done, and the learning is not."],
+["Three steps","So, three steps. Keep what works: AI as a tutor and as a help for teachers. Fix the risk: ask students to defend their work orally. Measure the result: test what students can explain without the tool."],
+["Fin","So yes to AI in schools, as an assistant. Let it do the repetitive work, so that our students can do the thinking. Thank you."]]],
 O:["What should schools do to prepare students for the jobs of the future?",[
-["Réponse","Ladies and gentlemen, how do you prepare someone for a job that does not exist yet? [pause] You cannot teach the job. You can teach the person how to learn it. If schools do one thing, it should be that."],
-["Pourquoi 1","This matters for two reasons. First, the jobs are moving. The World Economic Forum expects 170 million new jobs and 92 million lost by 2030. I lived a small version of this. I studied water and sanitation. In my research at Ganvié, I could measure pollution, but I could not map or predict it. So I moved to hydroinformatics and learned Python."],
-["Pourquoi 2","Second, employers want proof, and a transcript alone is not proof. Last month, with two classmates, I won third place in an innovation prize with a sensor that detects salt water in boreholes. Had we only sat exams, we would never have learned what real customers need."],
-["Trois étapes et fin","So here is how, in three steps. One: teach students how to learn. Two: build every year around one real local problem. Three: bring professionals into the classroom. We cannot predict the jobs of the future. But we can prepare the people who will invent them. Thank you."]]]
+["One thing","Ladies and gentlemen, how do you prepare someone for a job that does not exist yet? [pause] You cannot teach the job. So if schools do one thing, it should be to teach students how to learn."],
+["Two types : les moyens","The problem comes in two types. First, a lack of means: many schools have few laboratories and few real projects. The World Economic Forum expects 170 million new jobs and 92 million lost by 2030. So students need practice with real problems, and not just lectures."],
+["Two types : les mentalités","Second, a question of mindset: we still treat the exam as the goal. Last month, with two classmates, I won third place in an innovation prize with a sensor that detects salt water in boreholes. Had we only sat exams, we would never have learned what real customers need. So employers want proof, and a transcript alone is not proof."],
+["Three steps","So, three steps. Start small: one real local project in every year of study. Train the people: bring professionals to work with teachers. Measure the result: assess what students can do, not what they can recite."],
+["Fin","We cannot predict the jobs of the future. But we can prepare the people who will invent them. Thank you."]]]
 };
-
-const HAND=[
-["0–5 s","Quel type de sujet ?","Agree or disagree, what do you think ou question ouverte : le type te donne la méthode à suivre."],
-["5–12 s","Quel est mon camp ?","Cherche le mot à contester : completely, best, only, always. S’il n’y en a pas, dis ton avis en une phrase."],
-["12–20 s","Qui est concerné ?","Élève, enseignant, famille ou société. Garde-en deux : ce sont tes deux idées."],
-["20–25 s","Quelle histoire ?","Argent ou accès : la bourse Vallet. Compétences ou emploi : SalinWatch. Technologie : ton appli Word Battle."],
-["25–30 s","Que faire, et comment finir ?","Trois actions pour l’école, les enseignants ou parents, l’État ou les entreprises. Puis ta dernière phrase."]
-];
 const USE=[
-["Méthode","Lis la méthode du type une seule fois, puis ferme-la."],
-["Entraînement","Tire un sujet, réponds aux cinq questions, parle en t’enregistrant."],
-["Contrôle","Réécoute-toi, coche la liste et retiens un seul défaut à corriger."],
-["Corrigé","Lis-le seulement après avoir parlé. Garde une idée, sans apprendre le texte."],
-["Vocabulaire","Choisis deux expressions du thème que tu placeras au prochain passage."],
-["Deuxième passage","Refais le même sujet avec ce défaut corrigé, cette idée et ces deux expressions."]
+["Méthode","Lis une fois le cadre du type."],
+["Entraînement","Tire un sujet, remplis le 1-2-3 en 30 secondes, parle en t’enregistrant."],
+["Contrôle","Réécoute-toi, coche la liste, retiens un seul défaut."],
+["Corrigé et vocabulaire","Après avoir parlé seulement : garde une idée et deux expressions."],
+["Deuxième passage","Refais le même sujet avec ces trois éléments."]
 ];
-const HAND_END=[5,12,20,25,30];
+const PREP_END=[10,20,30];
 const VIEWS=[["drill","Entraînement"],["methode","Méthode"],["vocabulaire","Vocabulaire"]];
 const main=document.getElementById("main"),tabs=document.getElementById("tabs");
 tabs.innerHTML=VIEWS.map(v=>`<a href="#${v[0]}" data-v="${v[0]}">${v[1]}</a>`).join("");
 const ALLQ=THEMES.flatMap(t=>SUBJECTS[t.id].map(q=>({f:q[0],q:q[1],c:q.slice(2),theme:t})));
-const SPANS=[25,70,115,140,150];
+const SPANS=[25,115,140,150];
 const state={type:"all",theme:"all",q:ALLQ[15],phase:"idle",t0:0,elapsed:0,running:false,beeped:{},lock:null};
 let audio=null;
 
@@ -289,22 +288,24 @@ function tick(){
   if(clock){
     if(state.phase==="prep"){
       clock.textContent=fmt(Math.ceil(30-s));
-      const hi=HAND_END.findIndex(x=>s<x);
+      const hi=PREP_END.findIndex(x=>s<x);
       document.querySelectorAll(".steps li").forEach((l,i)=>l.classList.toggle("on",i===hi));
       if(s>=30){startSpeech();requestAnimationFrame(tick);return}
     }else{
       clock.textContent=fmt(s);
       const z=s<120?["zone-short","Continue : minimum 2:00"]:s<140?["zone-good","Bonne zone"]:s<170?["zone-late","Conclus maintenant"]:s<180?["zone-late","Dernière phrase"]:["zone-over","Temps dépassé"];
       clock.className="clock "+z[0];st.className="status "+z[0];st.textContent=z[1];
-      const idx=SPANS.findIndex(x=>s<x),cur=idx<0?4:idx;
+      const idx=SPANS.findIndex(x=>s<x),cur=idx<0?3:idx;
       document.querySelectorAll(".steps li").forEach((l,i)=>l.classList.toggle("on",i===cur));
       [[120,880,1],[140,880,2],[180,330,1]].forEach(([at,f,n])=>{if(s>=at&&!state.beeped[at]){state.beeped[at]=1;for(let i=0;i<n;i++)setTimeout(()=>beep(f),i*260)}});
     }
   }
   requestAnimationFrame(tick);
 }
-const corrige=q=>`<ol class="steps">${FAM[q.f].steps.map((s,i)=>`<li><span class="t">${s[0]}</span><span><b>${s[1]}</b><span class="en">${q.c[i]}</span></span></li>`).join("")}</ol><p class="src">Corrigé proposé, pas une réponse officielle. Un autre camp reste valable s’il est clair et bien défendu. Remplace les exemples qui ne sont pas exacts pour toi.</p>`;
-const stepsHtml=f=>`<ol class="steps">${FAM[f].steps.map(s=>`<li><span class="t">${s[0]}</span><span>${s[1]}</span></li>`).join("")}</ol>`;
+const CORR=[["0:25","One thing"],["0:45","Two : idée 1"],["0:45","Two : idée 2"],["0:25","Three steps"],["0:10","Fin"]];
+const corrige=q=>`<ol class="steps">${CORR.map((c,i)=>`<li><span class="t">${c[0]}</span><span><b>${c[1]}</b><span class="en">${q.c[i]}</span></span></li>`).join("")}</ol><p class="src">Corrigé proposé, pas une réponse officielle : il suit le 1-2-3, avec des idées adaptées au sujet. Remplace les exemples qui ne sont pas exacts pour toi.</p>`;
+const prepGrid=f=>`<ol class="steps">${[["10 s","1",FAM[f].one[0]],["10 s","2",FAM[f].two[0]],["10 s","3",FAM[f].three[0]]].map(r=>`<li><span class="t">${r[0]}</span><span><b>${r[1]} · ${r[2]}</b></span></li>`).join("")}</ol><p class="status">Un mot par case, rien de plus.</p>`;
+const speakGrid=f=>`<ol class="steps">${[["0:00","1 · "+FAM[f].one[0]],["0:25","2 · "+FAM[f].two[0]],["1:55","3 · "+FAM[f].three[0]],["2:20","Fin"]].map(r=>`<li><span class="t">${r[0]}</span><span><b>${r[1]}</b></span></li>`).join("")}</ol>`;
 function renderDrill(){
   const q=state.q,fam=FAM[q.f];
   let body="";
@@ -314,11 +315,11 @@ function renderDrill(){
     <details class="flat"><summary>Voir le corrigé sans m’entraîner</summary><div class="inner">${corrige(q)}</div></details>`;
   if(state.phase==="prep")body=`
     <div class="clock" id="clock">0:30</div>
-    <ol class="steps">${HAND.map(h=>`<li><span class="t">${h[0]}</span><span><b>${h[1]}</b></span></li>`).join("")}</ol>
+    ${prepGrid(q.f)}
     <div class="btns"><button class="b alt" id="skip">Commencer maintenant</button></div>`;
   if(state.phase==="speak")body=`
     <div class="clock" id="clock">0:00</div><div class="status" id="st"></div>
-    ${stepsHtml(q.f)}
+    ${speakGrid(q.f)}
     <p class="src">Un bip à 2:00, deux à 2:20, un grave à 3:00.</p>
     <div class="btns"><button class="b" id="end">Terminer</button></div>`;
   if(state.phase==="review"){
@@ -345,25 +346,31 @@ function renderDrill(){
   if(fh)fh.onchange=()=>{state.theme=fh.value;draw()};
 }
 function renderMethode(){
+  const block=(n,label,kw,en)=>`<li><span class="n">${n}</span><span><span class="tag">${label}</span><b>${kw}</b><span class="en">${en}</span></span></li>`;
   main.innerHTML=`<div class="view">
-  <section class="panel"><h2>Cadre de réflexion : une main, cinq questions</h2>
-    <p>Pendant les 30 secondes, pose-toi ces questions dans l’ordre, une par doigt. Tes réponses remplissent la méthode : tu n’as plus à chercher quoi dire.</p>
-    <ol class="steps">${HAND.map(h=>`<li><span class="t">${h[0]}</span><span><b>${h[1]}</b><span class="en">${h[2]}</span></span></li>`).join("")}</ol>
+  <section class="panel"><h2>Le 3-2-1 de Vinh Giang</h2>
+    <p><b>One thing, two types, three steps.</b> Son exemple sur l’avocat : une chose (excellent pour le régime keto), deux façons de le manger (écrasé ou comme un fruit), trois étapes (couper, écraser, assaisonner).</p>
+    <p>En 30 secondes, tu remplis seulement ces trois cases : <b>10 s pour le 1, 10 s pour le 2, 10 s pour le 3</b>. Le cadre de chaque type est déjà choisi.</p>
+    <ul><li><b>Le 2 :</b> pour chaque idée, dis le point, la preuve, la conséquence : “…, for example …, so …”.</li>
+    <li><b>Ton histoire :</b> toujours dans la deuxième idée. Argent ou accès : Vallet. Travail : SalinWatch. Technologie : ton appli.</li>
+    <li><b>Le temps :</b> 1 jusqu’à 0:25, 2 jusqu’à 1:55, 3 jusqu’à 2:20, fin à 2:30.</li></ul>
+    <p class="src">Le 3-2-1 est de Vinh Giang, qui conseille d’en choisir un seul pour une réponse courte. L’enchaînement des trois et les cases fixes par type sont mon adaptation, pour tenir 2 à 3 minutes.</p>
   </section>
-  <section class="panel"><h2>Utiliser les ressources</h2>
-    <p>Suis cet ordre pour chaque sujet. Un sujet se travaille en deux passages, environ 10 minutes au total.</p>
-    <ol class="steps">${USE.map((u,i)=>`<li><span class="t">${i+1}</span><span><b>${u[0]}</b><span class="en">${u[1]}</span></span></li>`).join("")}</ol>
-  </section>
-  <section class="panel"><h2>Une seule charpente</h2>
-    <p>Une idée, deux développements, trois actions : c’est le 3-2-1 de Vinh Giang, que j’enchaîne pour tenir 2:30. Seules les phrases changent selon le type de sujet.</p>
-    <ul><li><b>Sur scène :</b> deux secondes de silence avant de parler, un juré par phrase, des doigts pour « two reasons » et « three steps », une pause à la place de « euh ».</li>
-    <li><b>En cas de blanc :</b> « Let me give you a concrete example », puis une de tes histoires.</li></ul>
-  </section>
-  ${Object.keys(FAM).map(k=>`<section class="panel"><h2>${FAM[k].name}</h2>
-    <ol class="steps">${FAM[k].steps.map(s=>`<li><span class="t">${s[0]}</span><span><b>${s[1]}</b><span class="en">${s[2]}</span></span></li>`).join("")}</ol>
-    <p>${FAM[k].tip}</p>
-    <details class="flat"><summary>Exemple : ${SPEECHES[k][0]}</summary><div class="inner">${SPEECHES[k][1].map(p=>`<p><span class="tag">${p[0]}</span>${p[1]}</p>`).join("")}<p class="src">Inspire-toi de la charpente sans réciter le texte.</p></div></details>
-  </section>`).join("")}
+  ${Object.keys(FAM).map(k=>{const F=FAM[k];return `<section class="panel"><h2>${F.name}</h2>
+    <p class="formula">${F.formula}</p>
+    <ol class="f123">${block(1,"One thing",F.one[0],F.one[1])}${block(2,"Two types",F.two[0],F.two[1])}${block(3,"Three steps",F.three[0],F.three[1])}</ol>
+    <p><b>Fin :</b> ${F.close}</p>
+    <p class="tip">${F.note}</p>
+    <details class="flat"><summary>Exemple rempli : ${SPEECHES[k][0]}</summary><div class="inner">
+      <ol class="f123">${block(1,"Dans ta tête, en 10 s",F.ex[0],"")}${block(2,"Dans ta tête, en 10 s",F.ex[1],"")}${block(3,"Dans ta tête, en 10 s",F.ex[2],"")}</ol>
+      <span class="label">Ce que cela donne à l’oral</span>
+      ${SPEECHES[k][1].map(p=>`<p><span class="tag">${p[0]}</span>${p[1]}</p>`).join("")}
+      <p class="src">Inspire-toi du cadre sans réciter le texte.</p></div></details>
+  </section>`}).join("")}
+  <details><summary>Sur scène et en cas de blanc</summary><div class="inner"><ul>
+    <li>Deux secondes de silence avant de parler.</li><li>Un juré par phrase.</li><li>Montre 1, 2 et 3 avec les doigts.</li><li>Une pause à la place de « euh ».</li><li><b>Blanc :</b> “Let me give you a concrete example”, puis ton histoire.</li></ul></div></details>
+  <details><summary>Comment s’entraîner avec cette page</summary><div class="inner">
+    <ol class="steps">${USE.map((u,i)=>`<li><span class="t">${i+1}</span><span><b>${u[0]}</b><span class="en">${u[1]}</span></span></li>`).join("")}</ol></div></details>
   </div>`;
 }
 function renderVocab(){
