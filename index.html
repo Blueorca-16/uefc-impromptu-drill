@@ -33,7 +33,7 @@ p{margin:0}
 .sub{margin-top:4px}
 .src{font-size:.92rem}
 .label{font:600 .75rem var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.tabs{display:flex;gap:6px;border-bottom:1px solid var(--line);padding-bottom:10px}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;border-bottom:1px solid var(--line);padding-bottom:10px}
 .tabs a{padding:7px 13px;border-radius:8px;color:var(--fg);text-decoration:none;font-weight:600}
 .tabs a[aria-current="page"]{background:var(--fg);color:var(--bg)}
 .view,.stack{display:flex;flex-direction:column}
@@ -71,6 +71,12 @@ td:first-child{font-weight:600;width:52%}
 td:last-child{color:var(--muted)}
 ul{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:5px}
 .phrase{font-style:italic}
+mark.blank{background:var(--accent-soft);color:var(--fg);border-radius:4px;padding:0 3px;font-weight:600}
+.line{display:block;margin-top:4px;line-height:1.6}
+.steps li.opt{display:block}
+.toggle{display:flex;gap:9px;align-items:flex-start;font-size:.97rem}
+.toggle input{margin-top:5px}
+main a{color:var(--accent);font-weight:600}
 .formula{font:600 1.05rem/1.3 var(--display);color:var(--accent)}
 .f123{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
 .f123 li{display:grid;grid-template-columns:44px minmax(0,1fr);gap:12px;align-items:start}
@@ -252,19 +258,74 @@ const USE=[
 ["Deuxième passage","Refais le même sujet avec ces trois éléments."]
 ];
 const PREP_END=[10,20,30];
-const VIEWS=[["drill","Entraînement"],["methode","Méthode"],["vocabulaire","Vocabulaire"]];
+const OPENINGS=[
+["Question à la salle","Par défaut : elle compte pour l’interaction avec le public.","Let me start with a question: who in this room has ever {lien avec le sujet}?"],
+["Image","Quand le sujet parle d’élèves ou de familles.","Imagine a student who {une situation concrète}."],
+["Souvenir","Quand ton histoire colle au sujet.","A few years ago, {ce qui t’est arrivé}. That moment changed how I see this question."],
+["Constat","Seulement si tu es sûr de ton chiffre.","Today, {un fait ou un chiffre sûr}. That is why this question matters."]
+];
+const TRAME={
+A:[
+["0:00","Position","So the question today is: {le sujet}. My answer is clear: I {agree / disagree}. The one thing that matters here is {le mot clé}."],
+["","Annonce","I have two reasons: one for students, and one for society."],
+["0:25","Argument 1","Let me start with students. {Ton point}. For example, {ta preuve}. So, {la conséquence}."],
+["1:10","Passage + argument 2","That is the first reason. But this goes beyond one student. Now, think about society. {Ton point}. Let me give you my own example. {Ton histoire}. So, {la conséquence}."],
+["","Concession","Now, some people will say that {l’objection}. That is true, but {ta réponse}."],
+["1:55","Passage + solutions","So what should we do? I see three steps. First, schools should {action}. Second, teachers should {action}. Finally, the government should {action}."],
+["2:20","Fin","So, let me come back to the question. My answer is still {ton camp}. If you remember one thing today, let it be this: {ta phrase}. Thank you."]],
+T:[
+["0:00","Position","So the question today is: {le sujet}. My view is simple. The one thing I think about it is that it is {ton avis}, on one condition: {la condition}."],
+["","Annonce","There are two sides to this: the good, and the risk."],
+["0:25","Argument 1","Let me start with the good side. {Ton point}. For example, {ta preuve}. So, {la conséquence}."],
+["1:10","Passage + argument 2","That is the good side. But there is a risk we cannot ignore. The risk is that {ton point}. Let me give you my own example. {Ton histoire}. So, {la conséquence}."],
+["1:55","Passage + solutions","So how do we keep the good and avoid the risk? I see three steps. First, keep {ce qui marche}. Second, fix {le risque} by {action}. Finally, measure {le résultat}."],
+["2:20","Fin","So, let me come back to the question. I think it is {ton avis}, on one condition: {la condition}. If you remember one thing today, let it be this: {ta phrase}. Thank you."]],
+O:[
+["0:00","Position","So the question today is: {le sujet}. My answer is simple. If we do one thing, it should be {ta solution}."],
+["","Annonce","Why is this so hard today? The problem comes in two types: means and mindset."],
+["0:25","Argument 1","Let me start with means. Today, {ce qui manque}. For example, {ta preuve}. So, {la conséquence}."],
+["1:10","Passage + argument 2","That is the first problem. But even with all the means in the world, we would still need to change our mindset. Too often, {la mauvaise habitude}. Let me give you my own example. {Ton histoire}. So, {la conséquence}."],
+["1:55","Passage + solutions","So how do we fix this? I see three steps. First, start with {un petit projet}. Second, train {qui}. Finally, measure {le résultat}."],
+["2:20","Fin","So, let me come back to the question. If we do one thing, it should be {ta solution}. If you remember one thing today, let it be this: {ta phrase}. Thank you."]]
+};
+const TRAME_EX={
+A:["Online learning can completely replace traditional classrooms.","Let me start with a question: who in this room has ever {learned to swim by watching a video}?",[
+"So the question today is: {can online learning completely replace traditional classrooms}? My answer is clear: I {disagree}. The one thing that matters here is {the word “completely”}.",
+"I have two reasons: one for students, and one for society.",
+"Let me start with students. {Students need a person, not only a screen}. For example, {when I tutored fluid mechanics, I could see in a classmate’s face that they were lost}. So, {a student alone with a video can fall behind without anyone noticing}.",
+"That is the first reason. But this goes beyond one student. Now, think about society. {Online learning depends on what people already have}. Let me give you my own example. {I follow NASA’s online training from Benin, free of charge, because I have a connection and a laptop}. So, {it can widen the gap}.",
+"Now, some people will say that {online courses are cheaper}. That is true, but {cheap access is not equal access}.",
+"So what should we do? I see three steps. First, schools should {put lectures online and keep class time for practice}. Second, teachers should {be trained to teach that way}. Finally, the government should {invest in connection}.",
+"So, let me come back to the question. My answer is still {no}. If you remember one thing today, let it be this: {let’s give teachers better screens, not replace them with screens}. Thank you."]],
+T:["What do you think about the use of artificial intelligence in schools?","Let me start with a question: who in this room has ever {asked an AI for help with their work}?",[
+"So the question today is: {what do we think about AI in schools}? My view is simple. The one thing I think about it is that it is {an excellent assistant}, on one condition: {it never replaces the student’s own thinking}.",
+"There are two sides to this: the good, and the risk.",
+"Let me start with the good side. {AI gives teachers back time}. For example, {in a class of eighty students, it could correct the routine exercises}. So, {the teacher can help those who are struggling}.",
+"That is the good side. But there is a risk we cannot ignore. The risk is that {the work gets done without the learning}. Let me give you my own example. {I used AI to build a vocabulary app for this competition, but it could not learn the words for me}. So, {we must separate the tool from the learning}.",
+"So how do we keep the good and avoid the risk? I see three steps. First, keep {AI as a tutor}. Second, fix {cheating} by {asking students to defend their work orally}. Finally, measure {what students can explain without the tool}.",
+"So, let me come back to the question. I think it is {an excellent assistant}, on one condition: {it never replaces the student’s thinking}. If you remember one thing today, let it be this: {let AI do the repetitive work, so students can do the thinking}. Thank you."]],
+O:["What should schools do to prepare students for the jobs of the future?","Today, {the World Economic Forum expects 170 million new jobs and 92 million lost by 2030}. That is why this question matters.",[
+"So the question today is: {how do schools prepare students for the jobs of the future}? My answer is simple. If we do one thing, it should be {to teach students how to learn}.",
+"Why is this so hard today? The problem comes in two types: means and mindset.",
+"Let me start with means. Today, {many schools have few laboratories and few real projects}. For example, {a student can finish a course without ever solving a real problem}. So, {they arrive at work with knowledge they have never used}.",
+"That is the first problem. But even with all the means in the world, we would still need to change our mindset. Too often, {we treat the exam as the goal}. Let me give you my own example. {With two classmates, I built SalinWatch, a project on salt water in boreholes, and it taught us what real customers need}. So, {a project can prove what a transcript cannot}.",
+"So how do we fix this? I see three steps. First, start with {one real local project every year}. Second, train {teachers alongside professionals}. Finally, measure {what students can do, not what they can recite}.",
+"So, let me come back to the question. If we do one thing, it should be {to teach students how to learn}. If you remember one thing today, let it be this: {we cannot predict the jobs of the future, but we can prepare the people who will invent them}. Thank you."]]
+};
+const fill=t=>t.replace(/\{(.+?)\}/g,'<mark class="blank">$1</mark>');
+const VIEWS=[["drill","Entraînement"],["methode","Méthode"],["trame","Trame"],["vocabulaire","Vocabulaire"]];
 const main=document.getElementById("main"),tabs=document.getElementById("tabs");
 tabs.innerHTML=VIEWS.map(v=>`<a href="#${v[0]}" data-v="${v[0]}">${v[1]}</a>`).join("");
 const ALLQ=THEMES.flatMap(t=>SUBJECTS[t.id].map(q=>({f:q[0],q:q[1],c:q.slice(2),theme:t})));
-const SPANS=[25,115,140,150];
-const state={type:"all",theme:"all",q:ALLQ[15],phase:"idle",t0:0,elapsed:0,running:false,beeped:{},lock:null};
+const SPANS=[25,70,115,140,150];
+const state={type:"all",theme:"all",q:ALLQ[15],phase:"idle",t0:0,elapsed:0,running:false,beeped:{},lock:null,showTrame:true,trameType:"A"};
 let audio=null;
 
 function route(){
   const h=location.hash.slice(1),v=VIEWS.some(x=>x[0]===h)?h:"drill";
   if(state.running){stopTimer();state.phase="idle"}
   tabs.querySelectorAll("a").forEach(a=>{if(a.dataset.v===v)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});
-  ({drill:renderDrill,methode:renderMethode,vocabulaire:renderVocab})[v]();
+  ({drill:renderDrill,methode:renderMethode,trame:renderTrame,vocabulaire:renderVocab})[v]();
 }
 function beep(f,d=.18){try{if(!audio)return;const o=audio.createOscillator(),g=audio.createGain();o.frequency.value=f;g.gain.value=.15;o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d)}catch(e){}}
 const fmt=s=>{s=Math.max(0,Math.floor(s));return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")};
@@ -290,28 +351,56 @@ function tick(){
       clock.textContent=fmt(Math.ceil(30-s));
       const hi=PREP_END.findIndex(x=>s<x);
       document.querySelectorAll(".steps li").forEach((l,i)=>l.classList.toggle("on",i===hi));
-      if(s>=30){startSpeech();requestAnimationFrame(tick);return}
+      if(s>=30){startSpeech();setTimeout(tick,200);return}
     }else{
       clock.textContent=fmt(s);
       const z=s<120?["zone-short","Continue : minimum 2:00"]:s<140?["zone-good","Bonne zone"]:s<170?["zone-late","Conclus maintenant"]:s<180?["zone-late","Dernière phrase"]:["zone-over","Temps dépassé"];
       clock.className="clock "+z[0];st.className="status "+z[0];st.textContent=z[1];
-      const idx=SPANS.findIndex(x=>s<x),cur=idx<0?3:idx;
+      const idx=SPANS.findIndex(x=>s<x),cur=idx<0?4:idx;
       document.querySelectorAll(".steps li").forEach((l,i)=>l.classList.toggle("on",i===cur));
       [[120,880,1],[140,880,2],[180,330,1]].forEach(([at,f,n])=>{if(s>=at&&!state.beeped[at]){state.beeped[at]=1;for(let i=0;i<n;i++)setTimeout(()=>beep(f),i*260)}});
     }
   }
-  requestAnimationFrame(tick);
+  setTimeout(tick,200);
 }
 const CORR=[["0:25","One thing"],["0:45","Two : idée 1"],["0:45","Two : idée 2"],["0:25","Three steps"],["0:10","Fin"]];
 const corrige=q=>`<ol class="steps">${CORR.map((c,i)=>`<li><span class="t">${c[0]}</span><span><b>${c[1]}</b><span class="en">${q.c[i]}</span></span></li>`).join("")}</ol><p class="src">Corrigé proposé, pas une réponse officielle : il suit le 1-2-3, avec des idées adaptées au sujet. Remplace les exemples qui ne sont pas exacts pour toi.</p>`;
 const prepGrid=f=>`<ol class="steps">${[["10 s","1",FAM[f].one[0]],["10 s","2",FAM[f].two[0]],["10 s","3",FAM[f].three[0]]].map(r=>`<li><span class="t">${r[0]}</span><span><b>${r[1]} · ${r[2]}</b></span></li>`).join("")}</ol><p class="status">Un mot par case, rien de plus.</p>`;
-const speakGrid=f=>`<ol class="steps">${[["0:00","1 · "+FAM[f].one[0]],["0:25","2 · "+FAM[f].two[0]],["1:55","3 · "+FAM[f].three[0]],["2:20","Fin"]].map(r=>`<li><span class="t">${r[0]}</span><span><b>${r[1]}</b></span></li>`).join("")}</ol>`;
+const speakGrid=f=>{
+  const timed=[];TRAME[f].forEach(r=>{if(r[0])timed.push([r[0],r[1],r[2]]);else timed[timed.length-1][2]+=" "+r[2]});
+  return `<ol class="steps">${timed.map(r=>`<li><span class="t">${r[0]}</span><span><b>${r[1]}</b>${state.showTrame?`<span class="en">${r[2].replace(/\{.+?\}/g,"…")}</span>`:""}</span></li>`).join("")}</ol>`;
+};
+function renderTrame(){
+  const k=state.trameType,ex=TRAME_EX[k];
+  main.innerHTML=`<div class="view">
+  <section class="panel"><h2>Ta trame de discours</h2>
+    <p>Le texte normal est déjà écrit : dis-le tel quel. Tu ne réfléchis qu’aux <mark class="blank">parties surlignées</mark>, c’est-à-dire tes idées.</p>
+    <ol class="steps">
+      <li><span class="t">1</span><span>Choisis le type de sujet.</span></li>
+      <li><span class="t">2</span><span>Choisis une ouverture.</span></li>
+      <li><span class="t">3</span><span>Suis les phrases de passage dans l’ordre, en remplissant les parties surlignées.</span></li></ol>
+  </section>
+  <div class="chips" id="tt">${Object.keys(FAM).map(f=>`<button class="b ${f===k?"":"alt"}" data-f="${f}">${FAM[f].name}</button>`).join("")}</div>
+  <section class="panel"><h2>Étape 1 : choisis ton ouverture</h2>
+    <ol class="steps">${OPENINGS.map(o=>`<li class="opt"><span><b>${o[0]}</b><span class="en">${o[1]}</span><span class="line">${fill(o[2])}</span></span></li>`).join("")}</ol>
+    <p class="src">Après l’ouverture, marque une pause de deux secondes.</p>
+  </section>
+  <section class="panel"><h2>Étape 2 : suis le fil</h2>
+    <ol class="steps">${TRAME[k].map(r=>`<li><span class="t">${r[0]}</span><span><b>${r[1]}</b><span class="line">${fill(r[2])}</span></span></li>`).join("")}</ol>
+  </section>
+  <details><summary>Exemple rempli : ${ex[0]}</summary><div class="inner">
+    <p class="line">${fill(ex[1])}</p>${ex[2].map(t=>`<p class="line">${fill(t)}</p>`).join("")}
+    <p class="src">Remplace les exemples qui ne sont pas exacts pour toi.</p></div></details>
+  </div>`;
+  document.querySelectorAll("#tt button").forEach(b=>b.onclick=()=>{state.trameType=b.dataset.f;renderTrame()});
+}
 function renderDrill(){
   const q=state.q,fam=FAM[q.f];
   let body="";
   if(state.phase==="idle")body=`
     <div class="btns"><button class="b" id="go">Lancer les 30 secondes</button><button class="b alt" id="again">Autre sujet</button></div>
-    <p class="src">Lance d’abord le dictaphone de ton téléphone.</p>
+    <label class="toggle"><input type="checkbox" id="st2" ${state.showTrame?"checked":""}> Afficher les phrases de la trame pendant le discours</label>
+    <p class="src">Lance d’abord le dictaphone de ton téléphone. Décoche la trame dès que tu la connais : le jour J, tu ne l’auras pas sous les yeux.</p>
     <details class="flat"><summary>Voir le corrigé sans m’entraîner</summary><div class="inner">${corrige(q)}</div></details>`;
   if(state.phase==="prep")body=`
     <div class="clock" id="clock">0:30</div>
@@ -341,6 +430,7 @@ function renderDrill(){
   </div>`;
   const on=(id,f)=>{const e=document.getElementById(id);if(e)e.onclick=f};
   on("go",startPrep);on("again",draw);on("skip",startSpeech);on("end",endSpeech);on("redo",()=>{state.phase="idle";renderDrill()});
+  const st2=document.getElementById("st2");if(st2)st2.onchange=()=>{state.showTrame=st2.checked};
   const ft=document.getElementById("ft"),fh=document.getElementById("fh");
   if(ft)ft.onchange=()=>{state.type=ft.value;draw()};
   if(fh)fh.onchange=()=>{state.theme=fh.value;draw()};
@@ -350,6 +440,7 @@ function renderMethode(){
   main.innerHTML=`<div class="view">
   <section class="panel"><h2>Le 3-2-1 de Vinh Giang</h2>
     <p><b>One thing, two types, three steps.</b> Son exemple sur l’avocat : une chose (excellent pour le régime keto), deux façons de le manger (écrasé ou comme un fruit), trois étapes (couper, écraser, assaisonner).</p>
+    <p>Les phrases à dire entre les idées sont dans l’onglet <a href="#trame">Trame</a>.</p>
     <p>En 30 secondes, tu remplis seulement ces trois cases : <b>10 s pour le 1, 10 s pour le 2, 10 s pour le 3</b>. Le cadre de chaque type est déjà choisi.</p>
     <ul><li><b>Le 2 :</b> pour chaque idée, dis le point, la preuve, la conséquence : “…, for example …, so …”.</li>
     <li><b>Ton histoire :</b> toujours dans la deuxième idée. Argent ou accès : Vallet. Travail : SalinWatch. Technologie : ton appli.</li>
