@@ -228,12 +228,18 @@ media:[
 };
 const USE=[
 ["Méthode","Lis une fois le fil en 7 temps du type."],
-["Entraînement","Tire un sujet, remplis le 1-2-3 en 30 secondes, parle en t’enregistrant."],
+["Entraînement","Tire un sujet, prends tes deux décisions en 30 secondes, parle en t’enregistrant."],
 ["Contrôle","Réécoute-toi, coche la liste, retiens un seul défaut."],
 ["Corrigé et vocabulaire","Après avoir parlé seulement : garde une idée et deux expressions."],
 ["Deuxième passage","Refais le même sujet avec ces trois éléments."]
 ];
 const PREP_END=[10,20,30];
+const PICK={
+A:["Souligne le mot fort du sujet (completely, only, best, always…) et prends le camp pour lequel tu vois déjà un exemple.","« I disagree », en contestant le mot fort."],
+T:["Dis « utile, à une condition » et choisis la condition.","« A useful tool, provided that people are trained to use it well »."],
+O:["Choisis la solution que tu peux expliquer avec un exemple.","« Teach people to… » ou « Give everyone access to… »."]
+};
+const STORY_HINT="Argent ou accès : Vallet. Travail ou compétences : SalinWatch. Technologie : ton appli.";
 const OPENINGS=[
 ["Question à la salle","Par défaut : elle compte pour l’interaction avec le public.","Let me begin with a simple question: how many of us have ever {lien avec le sujet}?"],
 ["Image","Quand le sujet parle d’élèves ou de familles.","Picture a student who {une situation concrète}."],
@@ -357,7 +363,7 @@ function tick(){
 }
 const CORR=[["0:25","One thing"],["0:45","Two : idée 1"],["0:45","Two : idée 2"],["0:25","Three steps"],["0:10","Fin"]];
 const corrige=q=>`<ol class="steps">${CORR.map((c,i)=>`<li><span class="t">${c[0]}</span><span><b>${c[1]}</b><span class="en">${q.c[i]}</span></span></li>`).join("")}</ol><p class="src">Corrigé proposé, pas une réponse officielle : il suit le 1-2-3, avec des idées adaptées au sujet. Remplace les exemples qui ne sont pas exacts pour toi.</p>`;
-const prepGrid=f=>`<ol class="steps">${[["10 s","1",FAM[f].one],["10 s","2",FAM[f].two],["10 s","3",FAM[f].three]].map(r=>`<li><span class="t">${r[0]}</span><span><b>${r[1]} · ${r[2]}</b></span></li>`).join("")}</ol><p class="status">Un mot par case, rien de plus.</p>`;
+const prepGrid=f=>`<ol class="steps">${[["0–10 s","1 · Ton camp",PICK[f][0]],["10–20 s","2 · Ton histoire",STORY_HINT],["20–30 s","3 · Respire","Dis ta première phrase dans ta tête, puis deux respirations."]].map(r=>`<li><span class="t">${r[0]}</span><span><b>${r[1]}</b><span class="en">${r[2]}</span></span></li>`).join("")}</ol><p class="status">Deux décisions seulement. Le reste se trouve en parlant.</p>`;
 const speakGrid=f=>`<ol class="steps">${BEATS.map((b,i)=>`<li><span class="t">${b[0]}</span><span><b>${b[1]}</b>${state.showTrame?`<span class="en">${TRAME[f][i].replace(/\{.+?\}/g,"…").replace(/…\./g,"…")}</span>`:""}</span></li>`).join("")}</ol>`;
 const wordsLine=()=>`<p class="words">À placer : ${state.words.map(w=>`<b>${w}</b>`).join(" · ")}</p>`;
 function renderDrill(){
@@ -412,10 +418,17 @@ function renderMethode(){
     <p class="src">Le 3-2-1 est de Vinh Giang ; l’idée centrale unique vient du guide TED de Chris Anderson. Les 7 temps, les horaires et les phrases sont mon adaptation pour un discours de 2 à 3 minutes.</p>
   </section>
   <div class="chips" id="tt">${Object.keys(FAM).map(f=>`<button class="b ${f===k?"":"alt"}" data-f="${f}">${FAM[f].name}</button>`).join("")}</div>
-  <section class="panel"><h2>1. En 30 secondes : tes trois cases</h2>
+  <section class="panel"><h2>1. En 30 secondes : deux décisions</h2>
+    <p>Tu ne cherches pas d’idées pendant la préparation. Tu prends seulement deux décisions :</p>
+    <ol class="steps">
+      <li><span class="t">0–10 s</span><span><b>Ton camp</b><span class="en">${PICK[k][0]}</span></span></li>
+      <li><span class="t">10–20 s</span><span><b>Ton histoire</b><span class="en">${STORY_HINT}</span></span></li>
+      <li><span class="t">20–30 s</span><span><b>Respire</b><span class="en">Dis ta première phrase dans ta tête, puis deux respirations.</span></span></li></ol>
+    <p class="tip"><b>Si rien ne vient :</b> ${PICK[k][1]}</p>
+    <p><b>Pourquoi ça suffit :</b> ton accroche et ta grande idée sont déjà écrites, et elles durent environ 30 secondes à l’oral. Pendant que tu les dis, tu penses à ton point 1. Pendant ton histoire, tu penses à tes trois étapes. Les cases ci-dessous sont fixes : tu n’as qu’à les remplir.</p>
     <p class="formula">${F.formula}</p>
     <ol class="f123">${block(1,"One thing → grande idée",F.one)}${block(2,"Two types → points 1 et 2",F.two)}${block(3,"Three steps → trois étapes",F.three)}</ol>
-    <p class="tip">${F.note} Choisis aussi ton accroche et ton histoire.</p>
+    <p class="src">${F.note}</p>
   </section>
   <section class="panel"><h2>2. Ton accroche</h2>
     <ol class="steps">${OPENINGS.map(o=>`<li class="opt"><span><b>${o[0]}</b><span class="en">${o[1]}</span><span class="line">${fill(o[2])}</span></span></li>`).join("")}</ol>
