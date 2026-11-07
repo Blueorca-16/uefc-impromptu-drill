@@ -265,7 +265,9 @@ const main=document.getElementById("main"),tabs=document.getElementById("tabs");
 tabs.innerHTML=VIEWS.map(v=>`<a href="#${v[0]}" data-v="${v[0]}">${v[1]}</a>`).join("");
 const ALLQ=THEMES.flatMap(t=>SUBJECTS[t.id].map(q=>({f:q[0],q:q[1],c:q.slice(2),theme:t})));
 const SPANS=[15,30,65,105,120,140,160];
-const state={type:"all",theme:"all",q:ALLQ[15],phase:"idle",t0:0,elapsed:0,running:false,beeped:{},lock:null,showTrame:true,methodType:"A",words:[]};
+function shuffled(a){a=a.slice();for(let i=a.length-1;i>0;i--){const r=new Uint32Array(1);crypto.getRandomValues(r);const j=r[0]%(i+1);[a[i],a[j]]=[a[j],a[i]]}return a}
+let deck=[],deckKey="";
+const state={type:"all",theme:"all",q:shuffled(ALLQ)[0],phase:"idle",t0:0,elapsed:0,running:false,beeped:{},lock:null,showTrame:true,methodType:"A",words:[]};
 let audio=null;
 
 function route(){
@@ -278,9 +280,9 @@ function beep(f,d=.18){try{if(!audio)return;const o=audio.createOscillator(),g=a
 const fmt=s=>{s=Math.max(0,Math.floor(s));return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")};
 function draw(){
   const pool=ALLQ.filter(q=>(state.type==="all"||q.f===state.type)&&(state.theme==="all"||q.theme.id===state.theme));
-  let n=pool[Math.floor(Math.random()*pool.length)],i=0;
-  while(pool.length>1&&n===state.q&&i++<20)n=pool[Math.floor(Math.random()*pool.length)];
-  state.q=n;state.phase="idle";renderDrill();
+  const key=state.type+"|"+state.theme;
+  if(key!==deckKey||!deck.length){deck=shuffled(pool);deckKey=key;if(deck.length>1&&deck[deck.length-1]===state.q)deck.unshift(deck.pop())}
+  state.q=deck.pop();state.phase="idle";renderDrill();
 }
 function startPrep(){
   try{audio=audio||new (window.AudioContext||window.webkitAudioContext)();audio.resume()}catch(e){}
@@ -311,9 +313,9 @@ function tick(){
   }
   setTimeout(tick,200);
 }
-const CORR=[["0:25","One thing"],["0:45","Two : idée 1"],["0:45","Two : idée 2"],["0:25","Three steps"],["0:10","Fin"]];
+const CORR=[["0:00","One thing"],["0:30","Two : idée 1"],["1:05","Two : idée 2"],["2:00","Three steps"],["2:20","Fin"]];
 const corrige=q=>`<ol class="steps">${CORR.map((c,i)=>`<li><span class="t">${c[0]}</span><span><b>${c[1]}</b><span class="en">${q.c[i]}</span></span></li>`).join("")}</ol><p class="src">Corrigé proposé, pas une réponse officielle : il suit le 1-2-3, avec des idées adaptées au sujet. Remplace les exemples qui ne sont pas exacts pour toi.</p>`;
-const prepGrid=f=>`<ol class="steps">${[["10 s","1 · Ta réponse en une phrase",PICK[f]],["10 s","2 · Ton point 1","La première idée sur les élèves."],["10 s","3 · Ton histoire","Argent : Vallet. Travail : SalinWatch. Technologie : ton appli. École : tutorat."]].map(r=>`<li><span class="t">${r[0]}</span><span><b>${r[1]}</b><span class="en">${r[2]}</span></span></li>`).join("")}</ol><p class="status">Bloqué ? Commence quand même : l’accroche reprend le sujet et te donne du temps.</p>`;
+const prepGrid=f=>`<ol class="steps">${[["0:00","1 · Ta réponse en une phrase",PICK[f]],["0:10","2 · Ton point 1","La première idée sur les élèves."],["0:20","3 · Ton histoire","Argent : Vallet. Travail : SalinWatch. Technologie : ton appli. École : tutorat."]].map(r=>`<li><span class="t">${r[0]}</span><span><b>${r[1]}</b><span class="en">${r[2]}</span></span></li>`).join("")}</ol><p class="status">Bloqué ? Commence quand même : l’accroche reprend le sujet et te donne du temps.</p>`;
 const speakGrid=f=>`<ol class="steps">${BEATS.map((b,i)=>`<li><span class="t">${b[0]}</span><span><b>${b[1]}</b>${state.showTrame?`<span class="en">${TRAME[f][i].replace(/\{.+?\}/g,"…").replace(/…\./g,"…")}</span>`:""}</span></li>`).join("")}</ol>`;
 const wordsLine=()=>`<p class="words">À placer : ${state.words.map(w=>`<b>${w}</b>`).join(" · ")}</p>`;
 function renderDrill(){
